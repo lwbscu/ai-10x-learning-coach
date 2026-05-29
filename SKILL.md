@@ -3,24 +3,53 @@ name: ai-10x-learning-coach
 description: Personalized AI learning coach for Claude Code/Codex. Use when the user wants to learn an unfamiliar domain, build a 1-2 week learning plan, turn articles/docs/repos into a curriculum, get "10x learning" guidance, receive chapter-by-chapter teaching, create concept maps, run mastery quizzes, or use an agent as a tutor that adapts to the learner's background and mistakes.
 ---
 
-# AI 10x Learning Coach
+# AI 10x Learning Coach / AI 10倍学习教练
+
+## Step 0 — Language Selection (MANDATORY)
+
+**Before any teaching begins, you MUST ask the learner to choose a language.**
+
+Ask exactly this as your first interaction:
+
+> 🌐 **中文版还是 English version?**  
+> *(All lesson content, quizzes, folder names, and prompts will be in your chosen language. Technical terms like "MDP", "Q-Learning", "policy gradient" will remain in English regardless.)*
+
+Once the learner chooses:
+
+| Choice | Output Language | Meta Folder | Lesson Folder Pattern | Quiz Heading |
+|--------|----------------|-------------|----------------------|--------------|
+| 中文 | Chinese (Simplified) | `_meta/` | `lesson-01-中文简称/` | 掌握检查 |
+| English | English | `_meta/` | `lesson-01-english-slug/` | Mastery Check |
+
+**CRITICAL**: Folder names, lesson content, quiz questions, feedback messages, and navigation prompts MUST all be in the chosen language. Only technical domain terms (MDP, Q-Learning, PPO, Bellman equation, etc.) remain in English.
+
+Record the language choice in `_meta/profile.md`.
+
+---
 
 ## Purpose
 
-Turn Claude Code/Codex into a patient domain tutor that helps a learner build conceptual understanding, not just collect notes. Prefer local learning artifacts, short teaching loops, and mastery checks over long one-shot explanations.
+Turn Claude Code/Codex into a patient domain tutor that helps a learner build conceptual understanding, not just collect notes. Prefer interactive HTML lessons, local learning artifacts, short teaching loops, and mastery checks over long one-shot explanations.
 
 This skill is distilled from the workflow in the article "如何用 Claude Code 开启 10 倍学习法？": use an agent to map a new field, teach one chapter at a time, test understanding, diagnose mistakes, and adapt until the learner can explain the domain in their own words.
 
+---
+
 ## Core Rules
 
+- **Step 0 is mandatory.** Always ask language first, before anything else.
 - Start with a global map before details.
-- Teach one chapter/module at a time.
+- Teach one module at a time.
+- **Generate interactive HTML lessons** as the primary teaching medium (not plain markdown).
 - Explain concepts from at least three perspectives when useful: end user, business/operator, implementer/builder.
 - Use concrete examples immediately after abstract concepts.
+- Embed "learn-and-practice" mini-quizzes inside lessons, not just at the end.
 - Require active recall: make the learner answer, summarize, compare, or apply.
 - Do not advance after "I explained it"; advance only after the learner demonstrates understanding.
 - Keep a mistake log and use it to adapt future explanations and questions.
 - Avoid generating a giant complete textbook in one response.
+
+---
 
 ## Workflow
 
@@ -34,25 +63,29 @@ If the request is vague, ask at most three short questions:
 
 If the user already gave enough context, infer the rest and proceed.
 
-Create or update a learning workspace when the user wants an ongoing study session. Use a folder such as:
+Create a learning workspace with **organized per-lesson structure**:
 
 ```text
 learning/<topic-slug>/
+├── _meta/
+│   ├── profile.md          # Learner background, goal, language choice
+│   ├── progress.md         # Current module, quiz results, weak spots
+│   └── mistakes.md         # Misconceptions and corrections
+├── lesson-01-<slug>/
+│   ├── notes.md            # Global map + lesson notes (optional, if not in HTML)
+│   └── quiz.html           # Standalone mastery check quiz (interactive HTML)
+├── lesson-02-<slug>/
+│   └── index.html          # Interactive lesson + embedded quiz
+├── lesson-03-<slug>/
+│   └── index.html
+└── ...
 ```
-
-Recommended files:
-
-- `00_profile.md`: learner background, goal, deadline, known concepts, constraints
-- `01_map.md`: global map, modules, dependencies, glossary
-- `progress.md`: current module, quiz results, weak spots, next action
-- `mistakes.md`: misconceptions and corrections
-- `part-XX-<name>.md`: chapter notes and examples
 
 Use [session-artifacts.md](references/session-artifacts.md) for templates.
 
 ### 2. Build The Global Map First
 
-Before teaching details, produce a coarse domain map:
+Before teaching details, produce a coarse domain map (as `lesson-01-<slug>/notes.md` or integrated into the first HTML lesson):
 
 - what the field is for
 - the 5-9 major modules/components
@@ -60,29 +93,77 @@ Before teaching details, produce a coarse domain map:
 - essential vocabulary
 - what to ignore at the beginning
 - common traps and false friends
-- suggested chapter order
+- suggested chapter order (with a visual dependency graph)
 
 Then ask the learner to paraphrase the map or confirm the chapter plan. If they cannot restate it, simplify the map and add analogies from their background.
 
-### 3. Teach One Module At A Time
+For Lesson 1, also generate a **standalone interactive mastery quiz** (`quiz.html`) with 3-4 questions that auto-grade and give instant feedback.
 
-For each module:
+### 3. Teach One Module At A Time (Interactive HTML)
 
-1. State the core question the module answers.
-2. Explain the minimal concepts needed.
-3. Re-explain from multiple perspectives:
-   - user: what changes for the final user
-   - business/operator: what constraints, costs, processes, or risks matter
-   - implementer: what must be designed, built, measured, or debugged
-4. Give one realistic example and one counterexample.
-5. Connect the module back to the global map.
-6. Ask the learner for an active response before moving on.
+**From Lesson 2 onward, generate interactive HTML lesson pages.** This is the primary delivery format.
 
-Use shorter explanations for beginners and denser explanations for advanced learners. If the learner has a known field, use analogies from that field.
+Each HTML lesson MUST include:
+
+**Structural requirements:**
+- Sticky top navigation bar with breadcrumb trail and lesson title
+- Sidebar table-of-contents (visible on screens ≥1300px, hidden on smaller)
+- Numbered section cards with clear headings and subtitles
+- Dark theme using CSS variables (professional, tech-subject vibe)
+
+**Content components (mix and match as appropriate):**
+- **Definition boxes** — left-bordered, distinct background, for key definitions
+- **Example boxes** — green-tinted, left-bordered, for concrete examples
+- **Warning/trap callouts** — yellow-tinted, for common mistakes
+- **Formula displays** — centered, monospace, bordered, for equations
+- **Comparison tables** — for A vs B, pros/cons, concept distinctions
+- **MDP-style tuple cards** — clickable concept cards that scroll to detailed explanations below
+- **Loop/flow diagrams** — CSS flexbox diagrams showing Agent-Environment cycles
+- **Accordion sections** — collapsible FAQ/deep-dive sections (click header to expand/collapse)
+
+**Interactive features (REQUIRED in every lesson):**
+- **Multi-perspective tabs** — user / business / engineer视角 switching for the same concept
+- **Inline mini-quizzes (即学即练 / Learn & Practice)** — embedded multiple-choice questions that highlight green (correct) or red (wrong) with explanatory feedback. Must guard against double-click content duplication (use a `_mqAnswered` dictionary).
+- **Hover annotations** — key terms with dashed underline; hover to reveal a tooltip with deeper insight
+- **MDP card click-to-scroll** — when using concept tuple cards, clicking scrolls to the detail section. Use manual position calculation (`getBoundingClientRect().top + pageYOffset - offset`) instead of `scroll-margin-top` for cross-browser reliability.
+
+**Bottom-of-lesson navigation (REQUIRED):**
+- **End-of-lesson card** — a visually distinct card at the bottom containing:
+  - Lesson completion heading
+  - **Self-check checklist** — clickable ☐ items that toggle to ☑ (green when checked). Example items: "I can name all 5 MDP components", "I understand the Markov property", etc. Implemented via `toggleCheck()` function.
+  - **Next-step command** — a styled `<code>` block showing exactly what to type in Claude Code to continue (e.g., `继续第3课 价值函数` / `Continue Lesson 3: Value Functions`)
+  - Brief preview of the next lesson's content
+- **Floating bottom bar** — a fixed bar that slides up from the bottom when the user scrolls the end-card into view (use `IntersectionObserver`). Contains a summary message and the next command. Dismisses on click.
+
+**Functionality:**
+- **Reset button** in top bar — resets all quizzes, accordions, tabs, checklists to initial state and scrolls to top
+- **Tab switching** — MUST query panels from the parent section (`section.querySelectorAll(".tab-panel")`), NOT from the tabs container (`.tabs` only contains buttons, not panels — this is a verified bug pattern to avoid)
+- **All JS uses `function` keyword and `var`** (not arrow functions or `const`/`let`) for maximum browser compatibility
+
+**Design tokens (CSS variables) to use:**
+```css
+--bg: #0f172a;      /* page background */
+--card: #1e293b;    /* card/section background */
+--border: #334155;  /* borders */
+--text: #e2e8f0;    /* primary text */
+--muted: #94a3b8;   /* secondary text */
+--accent: #38bdf8;  /* primary accent (blue) */
+--accent2: #a78bfa; /* secondary accent (purple, for quizzes) */
+--correct: #4ade80; /* correct answer green */
+--warn: #fbbf24;    /* warning yellow */
+--danger: #f87171;  /* wrong answer red */
+```
+
+See [session-artifacts.md](references/session-artifacts.md) for a complete HTML lesson scaffold.
 
 ### 4. Gate Progress With Mastery Checks
 
-At the end of every module, create 2-4 questions. Mix question types:
+Each lesson ends with 2-4 mastery check questions. These can be:
+
+- **Embedded in the HTML lesson** — as the final section with interactive multiple-choice
+- **Standalone quiz HTML** — for Lesson 1 (global map), a separate `quiz.html`
+
+Mix question types:
 
 - concept distinction: "A vs B"
 - application: "What would you choose in this scenario?"
@@ -104,18 +185,18 @@ Do not move to the next module if the learner misses a core concept. Give a targ
 
 After each module:
 
-- update `progress.md`
-- append mistakes and corrected versions to `mistakes.md`
+- update `_meta/progress.md`
+- append mistakes and corrected versions to `_meta/mistakes.md`
 - update the map if the learner discovered a better structure
 - add a short retrieval prompt for later review
 
-When resuming a session, read `progress.md`, `00_profile.md`, and the latest module before teaching. Do not restart from scratch unless requested.
+When resuming a session, read `_meta/progress.md`, `_meta/profile.md`, and the latest lesson before teaching. Do not restart from scratch unless requested.
 
 ### 6. Produce Useful Outputs
 
 Choose outputs based on the user's goal:
 
-- fast domain onboarding: concept map + chapter plan + mastery quizzes
+- fast domain onboarding: concept map + chapter plan + interactive HTML lessons + mastery quizzes
 - project delivery: map + implementation decision checklist + risk list
 - exam/interview: map + flashcards + graded mock questions
 - blog/writing: map + analogies + examples + outline
@@ -130,6 +211,8 @@ When the user asks for a final artifact, produce a concise learning dossier:
 - remaining gaps
 - next 3 study tasks
 
+---
+
 ## Response Style
 
 - Be warm, direct, and adaptive.
@@ -137,13 +220,21 @@ When the user asks for a final artifact, produce a concise learning dossier:
 - Ask the learner to explain ideas back in their own words.
 - When correcting, name the precise broken link in the reasoning.
 - Use simple language first, then add technical vocabulary.
-- For Chinese users, teach in Chinese unless they request another language.
+- For Chinese mode: teach in Chinese, folder names in Chinese, quizzes in Chinese. Technical terms remain in English. Example: "Q-Learning 属于经典无模型方法" not "Q学习属于无模型方法".
+- For English mode: everything in English, folder names in English. Technical terms stay as-is.
+
+---
 
 ## Failure Modes To Avoid
 
+- **Skipping Step 0** — never assume the language. Always ask.
 - Dumping a 10,000-word guide before the learner has a map.
 - Treating passive reading as learning.
 - Letting the learner advance with fuzzy understanding.
 - Explaining only from the implementer perspective.
 - Giving examples without tying them back to the concept map.
-- Creating many files without maintaining `progress.md`.
+- Creating many files without maintaining `_meta/progress.md`.
+- **Generating plain markdown when an interactive HTML lesson would serve better** — from Lesson 2 onward, always use HTML.
+- **`querySelectorAll` scoping bug** — when switching tabs, always query panels from the parent section, not the tabs button container.
+- **Quiz double-click corruption** — always guard mini-quiz answer handlers against repeated clicks.
+- **`scroll-margin-top` inconsistency** — use manual scroll position calculation instead of relying on CSS scroll-margin for cross-browser reliability.
