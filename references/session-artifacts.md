@@ -22,8 +22,7 @@ Language-specific naming is mandatory:
 │   ├── 学习进度.md          # 当前课程、测验结果、薄弱点
 │   └── 错题记录.md          # 误区与纠正
 ├── 第01课-全局地图/
-│   ├── 笔记.md              # 全局地图 + 第1课笔记
-│   └── 掌握检查.html        # 独立交互式测验
+│   └── 课件.html            # 全局地图 + 嵌入式掌握检查
 ├── 第02课-MDP详解/
 │   └── 课件.html            # 交互式课件 + 嵌入式测验
 ├── 第03课-价值函数/
@@ -40,8 +39,7 @@ learning/<topic-slug>/
 │   ├── progress.md         # Current module, quiz results, weak spots
 │   └── mistakes.md         # Misconceptions and corrections
 ├── lesson-01-<slug>/
-│   ├── notes.md            # Global map + lesson 1 notes
-│   └── quiz.html           # Standalone mastery check quiz (interactive HTML)
+│   └── index.html          # Global map + embedded mastery check
 ├── lesson-02-<slug>/
 │   └── index.html          # Interactive lesson + embedded quiz
 ├── lesson-03-<slug>/
@@ -51,12 +49,12 @@ learning/<topic-slug>/
 
 **Naming examples by language:**
 
-| Mode | Workspace | Lesson folder | Notes file | Quiz file | Lesson HTML |
-|------|-----------|--------------|------------|-----------|-------------|
-| Chinese | `学习/强化学习/` | `第01课-全局地图/` | `笔记.md` | `掌握检查.html` | `课件.html` |
-| Chinese | `学习/强化学习/` | `第02课-MDP详解/` | *(in HTML)* | *(embedded)* | `课件.html` |
-| English | `learning/reinforcement-learning/` | `lesson-01-global-map/` | `notes.md` | `quiz.html` | `index.html` |
-| English | `learning/reinforcement-learning/` | `lesson-02-mdp/` | *(in HTML)* | *(embedded)* | `index.html` |
+| Mode | Workspace | Lesson folder | Lesson HTML | Mastery Check |
+|------|-----------|--------------|-------------|---------------|
+| Chinese | `学习/强化学习/` | `第01课-全局地图/` | `课件.html` | embedded |
+| Chinese | `学习/强化学习/` | `第02课-MDP详解/` | `课件.html` | embedded |
+| English | `learning/reinforcement-learning/` | `lesson-01-global-map/` | `index.html` | embedded |
+| English | `learning/reinforcement-learning/` | `lesson-02-mdp/` | `index.html` | embedded |
 
 ---
 
@@ -112,47 +110,27 @@ English mode path: `_meta/mistakes.md`
 
 ---
 
-## Global Map Notes
+## Lesson 1 Global Map HTML
 
-Chinese mode path: `第01课-全局地图/笔记.md`
-English mode path: `lesson-01-global-map/notes.md`
+Chinese mode path: `第01课-全局地图/课件.html`
+English mode path: `lesson-01-global-map/index.html`
 
-```markdown
-# Lesson 1: [Domain Name] Global Map / 全局地图
+Lesson 1 is not a Markdown note. It is the first interactive HTML lesson and MUST include:
 
-## What is this field? / 这个领域是什么？
-
-## Three Paradigms Comparison / 三大范式对比
-
-| Paradigm | Data Source | Feedback | Goal |
-|----------|------------|----------|------|
-| ... | ... | ... | ... |
-
-## Real-world Applications / 实际应用
-
-## N Core Modules / N 大核心模块
-
-1. **Module 1** — one-line description
-2. ...
-
-## Module Relationships / 模块关系 (Dependency Diagram)
-
-## Recommended Learning Path / 推荐学习路线
-
-## Key Terms / 关键术语
-
-| Term | Meaning / 含义 |
-|------|---------------|
-| ... | ... |
-
-## Mastery Check / 掌握检查 (3-4 questions)
-```
+- a one-sentence field definition
+- a comparison table against adjacent paradigms or fields
+- 5-9 module cards that form the domain map
+- a visible learning path/dependency diagram
+- a glossary/term quick-reference section
+- beginner traps and what to ignore at first
+- embedded mastery check questions in the same page
+- end-of-lesson self-check checklist and next-step command
 
 ---
 
 ## Interactive HTML Lesson Scaffold
 
-For Lesson 2 and beyond, generate an interactive HTML page. Below is the **minimum required scaffold**. Every HTML lesson must include all marked [REQUIRED] elements.
+For every lesson, including Lesson 1, generate an interactive HTML page. Below is the **minimum required scaffold**. Every HTML lesson must include all marked [REQUIRED] elements.
 
 ### Required CSS Variables (Dark Theme)
 
@@ -384,18 +362,16 @@ For Lesson 2 and beyond, generate an interactive HTML page. Below is the **minim
 
 ---
 
-## Standalone Quiz HTML
+## Embedded Mastery Check
 
-Chinese mode path: `第01课-全局地图/掌握检查.html`
-English mode path: `lesson-01-global-map/quiz.html`
+Every lesson page includes its mastery check inside the same HTML file. Do not generate standalone quiz files by default.
 
-For Lesson 1, generate a separate quiz with:
+Required behavior:
 
-- Progress bar showing question X of N
-- One question visible at a time, or all visible in scrollable cards
-- Auto-grading with instant feedback (correct / partially-correct / wrong)
-- Hint button per question
-- Sample answer revealed after correct answer
-- Completion screen when all questions answered correctly, showing next-step command
+- 2-4 questions per lesson
+- auto-grading with instant feedback (correct / partially-correct / wrong)
+- hint button per question where useful
+- sample answer or explanation after the learner answers
+- completion state that shows the next-step command
 
 Language: all UI text in the learner's chosen language. Technical terms in English.

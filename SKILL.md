@@ -16,12 +16,14 @@ Ask exactly this as your first interaction:
 
 Once the learner chooses:
 
-| Choice | Output Language | Workspace Root | Meta Folder | Lesson Folder Pattern | Notes File | Quiz File | Lesson HTML |
-|--------|----------------|----------------|-------------|----------------------|------------|-----------|-------------|
-| 中文 | Chinese (Simplified) | `学习/<主题>/` | `元数据/` | `第01课-中文简称/` | `笔记.md` | `掌握检查.html` | `课件.html` |
-| English | English | `learning/<topic-slug>/` | `_meta/` | `lesson-01-english-slug/` | `notes.md` | `quiz.html` | `index.html` |
+| Choice | Output Language | Workspace Root | Meta Folder | Lesson Folder Pattern | Lesson HTML |
+|--------|----------------|----------------|-------------|----------------------|-------------|
+| 中文 | Chinese (Simplified) | `学习/<主题>/` | `元数据/` | `第01课-中文简称/` | `课件.html` |
+| English | English | `learning/<topic-slug>/` | `_meta/` | `lesson-01-english-slug/` | `index.html` |
 
-**CRITICAL**: In Chinese mode, all generated learning artifacts MUST use Chinese names: folders, note files, quiz files, lesson files, UI text, quiz questions, feedback messages, and navigation prompts. Keep only repository/skill functional files in their required names: `SKILL.md`, `README.md`, `README.cn.md`, `README.en.md`, `LICENSE`, `agents/openai.yaml`, and `references/*.md`. Technical domain terms (MDP, Q-Learning, PPO, Bellman equation, etc.) remain in English.
+**CRITICAL**: In Chinese mode, all generated learner-facing artifacts MUST use Chinese names: lesson folders, lesson HTML files, UI text, quiz questions, feedback messages, and navigation prompts. Keep only repository/skill functional files in their required names: `SKILL.md`, `README.md`, `README.cn.md`, `README.en.md`, `LICENSE`, `agents/openai.yaml`, and `references/*.md`. Technical domain terms (MDP, Q-Learning, PPO, Bellman equation, etc.) remain in English.
+
+**Learner-facing lesson content is HTML-only from Lesson 1.** Do not create course reading files such as `笔记.md`, `notes.md`, standalone `掌握检查.html`, or standalone `quiz.html` by default. Keep Markdown only for agent-maintained metadata files such as `学习档案.md`, `学习进度.md`, and `错题记录.md` (or English `_meta/*.md`).
 
 Record the language choice in the language-specific profile file: `元数据/学习档案.md` for Chinese mode, `_meta/profile.md` for English mode.
 
@@ -74,8 +76,7 @@ Chinese mode MUST use this naming style:
 │   ├── 学习进度.md          # 当前课程、测验结果、薄弱点
 │   └── 错题记录.md          # 误区与纠正
 ├── 第01课-全局地图/
-│   ├── 笔记.md              # 全局地图与第1课笔记
-│   └── 掌握检查.html        # 独立交互式测验
+│   └── 课件.html            # 全局地图 + 嵌入式掌握检查
 ├── 第02课-MDP详解/
 │   └── 课件.html            # 交互式课件 + 嵌入式测验
 ├── 第03课-价值函数/
@@ -92,8 +93,7 @@ learning/<topic-slug>/
 │   ├── progress.md         # Current module, quiz results, weak spots
 │   └── mistakes.md         # Misconceptions and corrections
 ├── lesson-01-<slug>/
-│   ├── notes.md            # Global map + lesson notes (optional, if not in HTML)
-│   └── quiz.html           # Standalone mastery check quiz (interactive HTML)
+│   └── index.html          # Global map + embedded mastery check
 ├── lesson-02-<slug>/
 │   └── index.html          # Interactive lesson + embedded quiz
 ├── lesson-03-<slug>/
@@ -105,10 +105,10 @@ Use [session-artifacts.md](references/session-artifacts.md) for templates.
 
 ### 2. Build The Global Map First
 
-Before teaching details, produce a coarse domain map:
+Before teaching details, produce a coarse domain map as an interactive HTML lesson:
 
-- Chinese mode: `第01课-全局地图/笔记.md`
-- English mode: `lesson-01-global-map/notes.md`
+- Chinese mode: `第01课-全局地图/课件.html`
+- English mode: `lesson-01-global-map/index.html`
 
 - what the field is for
 - the 5-9 major modules/components
@@ -120,14 +120,11 @@ Before teaching details, produce a coarse domain map:
 
 Then ask the learner to paraphrase the map or confirm the chapter plan. If they cannot restate it, simplify the map and add analogies from their background.
 
-For Lesson 1, also generate a **standalone interactive mastery quiz** with 3-4 questions that auto-grade and give instant feedback:
-
-- Chinese mode: `第01课-全局地图/掌握检查.html`
-- English mode: `lesson-01-global-map/quiz.html`
+For Lesson 1, embed a **mastery check section** with 3-4 questions inside the same HTML page. The learner should not need to open a separate quiz file.
 
 ### 3. Teach One Module At A Time (Interactive HTML)
 
-**From Lesson 2 onward, generate interactive HTML lesson pages.** This is the primary delivery format.
+**For every lesson, including Lesson 1, generate one interactive HTML lesson page.** This is the primary delivery format.
 
 Each HTML lesson MUST include:
 
@@ -184,10 +181,7 @@ See [session-artifacts.md](references/session-artifacts.md) for a complete HTML 
 
 ### 4. Gate Progress With Mastery Checks
 
-Each lesson ends with 2-4 mastery check questions. These can be:
-
-- **Embedded in the HTML lesson** — as the final section with interactive multiple-choice
-- **Standalone quiz HTML** — for Lesson 1 (global map), use `掌握检查.html` in Chinese mode and `quiz.html` in English mode.
+Each lesson ends with 2-4 mastery check questions embedded in the same HTML lesson page as the final interactive section.
 
 Mix question types:
 
@@ -246,7 +240,7 @@ When the user asks for a final artifact, produce a concise learning dossier:
 - Ask the learner to explain ideas back in their own words.
 - When correcting, name the precise broken link in the reasoning.
 - Use simple language first, then add technical vocabulary.
-- For Chinese mode: teach in Chinese, generated learning folder/file names in Chinese, quizzes in Chinese. Use names like `学习/强化学习/第01课-全局地图/笔记.md`, `掌握检查.html`, and `课件.html`. Technical terms remain in English. Example: "Q-Learning 属于经典无模型方法" not "Q学习属于无模型方法".
+- For Chinese mode: teach in Chinese, generated learning folder/file names in Chinese, quizzes in Chinese. Use names like `学习/强化学习/第01课-全局地图/课件.html`. Technical terms remain in English. Example: "Q-Learning 属于经典无模型方法" not "Q学习属于无模型方法".
 - For English mode: everything in English, folder names in English. Technical terms stay as-is.
 
 ---
@@ -260,7 +254,7 @@ When the user asks for a final artifact, produce a concise learning dossier:
 - Explaining only from the implementer perspective.
 - Giving examples without tying them back to the concept map.
 - Creating many files without maintaining the language-specific progress file (`元数据/学习进度.md` or `_meta/progress.md`).
-- **Generating plain markdown when an interactive HTML lesson would serve better** — from Lesson 2 onward, always use HTML.
+- **Generating plain markdown for learner-facing lesson content** — every lesson, including the global map, must be one interactive HTML page.
 - **`querySelectorAll` scoping bug** — when switching tabs, always query panels from the parent section, not the tabs button container.
 - **Quiz double-click corruption** — always guard mini-quiz answer handlers against repeated clicks.
 - **`scroll-margin-top` inconsistency** — use manual scroll position calculation instead of relying on CSS scroll-margin for cross-browser reliability.
