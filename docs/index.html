@@ -349,11 +349,32 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      text-align: left;
+      color: var(--text);
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
     }
 
     .map-node strong { font-size: 0.92rem; }
     .map-node span { color: var(--muted); font-size: 0.76rem; }
-    .map-node.hot { border-color: rgba(56, 189, 248, 0.48); }
+    .map-node:hover,
+    .map-node.hot {
+      border-color: rgba(56, 189, 248, 0.56);
+      background: rgba(56, 189, 248, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .concept-detail {
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      background: rgba(56, 189, 248, 0.055);
+      border-radius: 8px;
+      padding: 12px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .concept-detail strong { color: var(--cyan); }
+    .concept-detail p { margin: 0; color: #cbd5e1; font-size: 0.88rem; }
 
     .tabs {
       display: flex;
@@ -392,13 +413,66 @@
     }
 
     .quiz h3 { margin: 0 0 10px; font-size: 1rem; }
+    .quiz-mode {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .mode-btn {
+      border: 1px solid rgba(230, 237, 247, 0.14);
+      background: rgba(255, 255, 255, 0.035);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 6px 11px;
+      cursor: pointer;
+      font-size: 0.84rem;
+    }
+
+    .mode-btn.active { border-color: var(--purple); color: #ddd6fe; background: rgba(167, 139, 250, 0.12); }
     .quiz-options { display: grid; gap: 8px; }
     .quiz-option { text-align: left; }
     .quiz-option.correct { border-color: var(--green); background: rgba(74, 222, 128, 0.1); }
     .quiz-option.wrong { border-color: var(--red); background: rgba(251, 113, 133, 0.1); }
+    .answer-input {
+      width: 100%;
+      min-height: 88px;
+      resize: vertical;
+      border: 1px solid rgba(230, 237, 247, 0.14);
+      background: rgba(8, 13, 26, 0.7);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 10px 11px;
+      font: inherit;
+      line-height: 1.55;
+    }
+    .answer-input.code {
+      font-family: Consolas, "SFMono-Regular", monospace;
+      min-height: 120px;
+    }
+    .answer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .hint-box {
+      display: none;
+      margin-top: 10px;
+      border-left: 3px solid var(--amber);
+      background: rgba(251, 191, 36, 0.08);
+      color: #fde68a;
+      border-radius: 0 8px 8px 0;
+      padding: 10px 12px;
+      font-size: 0.86rem;
+    }
+    .hint-box.show { display: block; }
     .feedback { min-height: 26px; margin: 10px 0 0; color: var(--muted); }
     .feedback.ok { color: #bbf7d0; }
     .feedback.no { color: #fecdd3; }
+    .feedback.partial { color: #fde68a; }
+    .hidden { display: none !important; }
 
     .checks {
       display: grid;
@@ -632,12 +706,18 @@
                 </div>
                 <div class="lesson-content">
                   <div class="map-grid">
-                    <div class="map-node hot"><strong>MDP</strong><span>决策问题的数学地基</span></div>
-                    <div class="map-node"><strong>Value</strong><span>从现在往后能拿多少分</span></div>
-                    <div class="map-node"><strong>Policy</strong><span>什么状态下该做什么</span></div>
-                    <div class="map-node"><strong>Explore</strong><span>试新动作还是用旧经验</span></div>
-                    <div class="map-node"><strong>Q-Learning</strong><span>经典无模型方法</span></div>
-                    <div class="map-node"><strong>DQN / PPO</strong><span>深度强化学习代表</span></div>
+                    <button class="map-node hot" data-topic="mdp" type="button"><strong>MDP</strong><span>决策问题的数学地基</span></button>
+                    <button class="map-node" data-topic="value" type="button"><strong>Value</strong><span>从现在往后能拿多少分</span></button>
+                    <button class="map-node" data-topic="policy" type="button"><strong>Policy</strong><span>什么状态下该做什么</span></button>
+                    <button class="map-node" data-topic="explore" type="button"><strong>Explore</strong><span>试新动作还是用旧经验</span></button>
+                    <button class="map-node" data-topic="qlearning" type="button"><strong>Q-Learning</strong><span>经典无模型方法</span></button>
+                    <button class="map-node" data-topic="deep" type="button"><strong>DQN / PPO</strong><span>深度强化学习代表</span></button>
+                  </div>
+
+                  <div class="concept-detail" id="conceptDetail">
+                    <strong>当前选中：MDP</strong>
+                    <p>把一个决策问题拆成 State、Action、Transition、Reward、Discount，让后面的 Value、Q-Learning、PPO 都有共同语言。</p>
+                    <p>点击上面任意模块，课件会同步切换讲解、练习题和学习记录。</p>
                   </div>
 
                   <div>
@@ -651,10 +731,23 @@
 
                   <div class="quiz">
                     <h3 id="quizTitle">即学即练：RL 和监督学习最大的区别是什么？</h3>
-                    <div class="quiz-options">
-                      <button class="quiz-option" data-correct="false" type="button">监督学习也会试错，所以两者没有本质区别</button>
-                      <button class="quiz-option" data-correct="true" type="button">RL 通过环境交互和延迟奖励学习一串决策</button>
+                    <div class="quiz-mode" aria-label="Question type">
+                      <button class="mode-btn active" data-mode="choice" type="button">选择题</button>
+                      <button class="mode-btn" data-mode="short" type="button">简答题</button>
+                      <button class="mode-btn" data-mode="code" type="button">简单编程</button>
                     </div>
+                    <div class="quiz-options" id="choiceArea"></div>
+                    <div id="shortArea" class="hidden">
+                      <textarea class="answer-input" id="shortAnswer" placeholder="用自己的话回答，写 2-4 句即可。"></textarea>
+                    </div>
+                    <div id="codeArea" class="hidden">
+                      <textarea class="answer-input code" id="codeAnswer" placeholder="写伪代码或 Python 风格代码，重点是表达思路。"></textarea>
+                    </div>
+                    <div class="answer-actions">
+                      <button class="btn" id="hintButton" type="button">提示 1</button>
+                      <button class="btn primary" id="checkButton" type="button">提交评判</button>
+                    </div>
+                    <div class="hint-box" id="hintBox">点击提示，会逐步展开解题线索。</div>
                     <p class="feedback" id="quizFeedback">选择一个答案，看看课件如何即时诊断。</p>
                   </div>
 
@@ -985,6 +1078,756 @@
       });
 
       updateRecord();
+    })();
+
+    (function() {
+      var copyRecord = document.getElementById("copyRecord");
+      var recordPreview = document.getElementById("recordPreview");
+      var recordPercent = document.getElementById("recordPercent");
+      var recordSummary = document.getElementById("recordSummary");
+      var quizTitle = document.getElementById("quizTitle");
+      var quizFeedback = document.getElementById("quizFeedback");
+      var choiceArea = document.getElementById("choiceArea");
+      var shortArea = document.getElementById("shortArea");
+      var codeArea = document.getElementById("codeArea");
+      var shortAnswer = document.getElementById("shortAnswer");
+      var codeAnswer = document.getElementById("codeAnswer");
+      var hintButton = document.getElementById("hintButton");
+      var hintBox = document.getElementById("hintBox");
+      var checkButton = document.getElementById("checkButton");
+      var conceptDetail = document.getElementById("conceptDetail");
+      var mapNodes = Array.prototype.slice.call(document.querySelectorAll(".map-node"));
+      var modeButtons = Array.prototype.slice.call(document.querySelectorAll(".mode-btn"));
+      var checkItems = Array.prototype.slice.call(document.querySelectorAll(".check-item"));
+      var tabButtons = Array.prototype.slice.call(document.querySelectorAll(".tab-btn"));
+      var tabPanel = document.getElementById("tabPanel");
+      var langCn = document.getElementById("langCn");
+      var langEn = document.getElementById("langEn");
+      var langPill = document.getElementById("langPill");
+      var crumb = document.getElementById("crumb");
+
+      var lang = "cn";
+      var activeTopic = "mdp";
+      var activeMode = "choice";
+      var hintIndex = 0;
+      var selectedChoice = -1;
+      var lastResult = { status: "unanswered", answer: "-", feedback: "", missing: [] };
+
+      var copyLabels = {
+        cn: { ready: "复制详细学习记录", done: "已复制详细学习记录" },
+        en: { ready: "Copy detailed record", done: "Detailed record copied" }
+      };
+
+      var modeLabels = {
+        cn: { choice: "选择题", short: "简答题", code: "简单编程" },
+        en: { choice: "Multiple choice", short: "Short answer", code: "Tiny coding" }
+      };
+
+      var panels = {
+        user: {
+          cn: "你不是在读长文，而是在一个课件里点击知识卡、切换题型、查看提示、回答问题、勾选自检，再把详细学习记录交回给 AI。",
+          en: "You are not reading a wall of text. You click concept cards, switch question types, use hints, answer, self-check, and hand a detailed record back to AI."
+        },
+        builder: {
+          cn: "每个课件都是自包含 HTML：概念地图、tabs、测验、提示、清单、学习记录导出都在同一个文件里。",
+          en: "Each lesson is a self-contained HTML file: concept map, tabs, quizzes, hints, checklist, and learning-record export in one page."
+        },
+        ai: {
+          cn: "AI 读取的不只是分数，而是哪张知识卡、哪种题型、错因、提示使用量和未勾选清单，从薄弱点继续复教。",
+          en: "AI reads more than a score: concept, question type, error cause, hints used, and unchecked items, then reteaches weak spots."
+        }
+      };
+
+      var concepts = {
+        mdp: {
+          label: "MDP",
+          cn: {
+            tagline: "决策问题的数学地基",
+            detail: "MDP 把一个决策问题拆成 State、Action、Transition、Reward、Discount，让后面的 Value、Q-Learning、PPO 都有共同语言。",
+            why: "先学它，是为了知道 RL 到底在优化什么、观察什么、反馈什么。",
+            next: "继续第02课 MDP详解",
+            questions: {
+              choice: {
+                title: "选择题：MDP 五元组里 Reward 的作用是什么？",
+                options: [
+                  { text: "直接告诉 Agent 最终正确答案", ok: false, feedback: "不对。Reward 不是标注答案，它只是每一步交互后的分数信号。" },
+                  { text: "把动作结果转成可优化的分数信号", ok: true, feedback: "正确。Reward 让 Agent 能比较哪些行为更值得重复。" },
+                  { text: "负责存储所有历史轨迹", ok: false, feedback: "不对。轨迹是交互记录，Reward 只是其中的反馈值。" }
+                ],
+                hints: ["先想游戏里的金币、扣血和通关分。", "Reward 是环境给 Agent 的即时反馈，不是人类给的标准答案。", "如果没有 Reward，Agent 不知道哪个动作更好。"],
+                expected: "Reward 把动作结果转成可优化的分数信号。"
+              },
+              short: {
+                title: "简答题：用空调控温举例说明 State、Action、Reward。",
+                placeholder: "例如：State 包含当前温度……Action 可以是……Reward 可以是……",
+                keywords: ["温度", "状态", "动作", "奖励"],
+                hints: ["State 是它能看到的局面。", "Action 是它能执行的操作。", "Reward 要同时考虑舒适度和能耗。"],
+                expected: "State 可包含当前温度/目标温度/室外温度；Action 可是升温、降温、保持；Reward 可奖励接近目标温度并惩罚耗电。"
+              },
+              code: {
+                title: "简单编程：写一个 step(state, action)，返回 next_state 和 reward。",
+                placeholder: "function step(state, action) {\n  // 根据 action 更新温度\n  // 计算 reward\n  return { nextState: ..., reward: ... };\n}",
+                keywords: ["reward", "next", "return"],
+                hints: ["先根据 action 得到 nextState。", "再用目标温度和能耗计算 reward。", "最后 return nextState 和 reward。"],
+                expected: "代码需要体现 nextState 更新、reward 计算、return 两个信息。"
+              }
+            }
+          },
+          en: {
+            tagline: "The mathematical ground for decision problems",
+            detail: "An MDP decomposes a decision problem into State, Action, Transition, Reward, and Discount, giving Value, Q-Learning, and PPO a shared language.",
+            why: "Learn it first so you know what RL observes, optimizes, and receives as feedback.",
+            next: "Continue Lesson 2: MDP",
+            questions: {
+              choice: {
+                title: "Multiple choice: What does Reward do in an MDP?",
+                options: [
+                  { text: "It directly gives the final correct answer", ok: false, feedback: "Not quite. Reward is not a labeled answer; it is a score after interaction." },
+                  { text: "It turns action outcomes into an optimizable score signal", ok: true, feedback: "Correct. Reward lets the Agent compare which behaviors are worth repeating." },
+                  { text: "It stores every historical trajectory", ok: false, feedback: "No. Trajectories store histories; Reward is one feedback value inside them." }
+                ],
+                hints: ["Think coins, damage, and level score in a game.", "Reward is feedback from the environment, not a human label.", "Without reward, the Agent cannot tell better actions from worse ones."],
+                expected: "Reward turns action outcomes into an optimizable score signal."
+              },
+              short: {
+                title: "Short answer: Use air-conditioner control to explain State, Action, and Reward.",
+                placeholder: "State contains current temperature... Action can be... Reward can be...",
+                keywords: ["temperature", "state", "action", "reward"],
+                hints: ["State is what the controller can observe.", "Action is what it can do.", "Reward should balance comfort and energy."],
+                expected: "State can include current/target/outdoor temperature; Action can heat, cool, or hold; Reward can reward comfort and penalize power use."
+              },
+              code: {
+                title: "Tiny coding: Write step(state, action), returning next_state and reward.",
+                placeholder: "function step(state, action) {\n  // update temperature from action\n  // compute reward\n  return { nextState: ..., reward: ... };\n}",
+                keywords: ["reward", "next", "return"],
+                hints: ["Update nextState from action first.", "Compute reward from target error and energy cost.", "Return both nextState and reward."],
+                expected: "The code should show nextState update, reward computation, and return both values."
+              }
+            }
+          }
+        },
+        value: {
+          label: "Value",
+          cn: {
+            tagline: "从现在往后能拿多少分",
+            detail: "Value 估计某个状态或动作从现在到未来的长期回报，帮助 Agent 不只看眼前奖励。",
+            why: "它让 Agent 学会延迟满足：现在少拿一点分，未来可能赢更多。",
+            next: "继续第03课 价值函数",
+            questions: {
+              choice: {
+                title: "选择题：Value 和单步 Reward 最大区别是什么？",
+                options: [
+                  { text: "Value 看长期累计回报，Reward 是当前一步反馈", ok: true, feedback: "正确。Value 是面向未来的估计，Reward 是当下收到的分数。" },
+                  { text: "Value 只在监督学习里出现", ok: false, feedback: "不对。Value 是 RL 的核心概念。" },
+                  { text: "Reward 一定比 Value 更重要", ok: false, feedback: "不对。短期 Reward 可能诱导短视行为。" }
+                ],
+                hints: ["想一手棋：眼前吃子不一定最好。", "Reward 是一步，Value 是从这里往后的总期望。", "Value 关心长期，不只关心当下。"],
+                expected: "Value 看长期累计回报，Reward 是当前一步反馈。"
+              },
+              short: {
+                title: "简答题：为什么只看眼前 Reward 会让 Agent 变短视？",
+                placeholder: "用游戏、投资、学习任意例子解释。",
+                keywords: ["长期", "未来", "短视"],
+                hints: ["眼前奖励高，不代表最终结果好。", "Value 把未来可能得到的奖励也算进去。", "可以用游戏里贪金币被怪打死举例。"],
+                expected: "只看 Reward 会选择眼前小利；Value 估计长期累计回报，能避免为了短期奖励牺牲未来收益。"
+              },
+              code: {
+                title: "简单编程：写一行伪代码表达 return = reward + gamma * next_value。",
+                placeholder: "target = ...",
+                keywords: ["reward", "gamma", "value"],
+                hints: ["先拿当前 reward。", "未来价值要乘 gamma。", "把两者相加就是目标回报。"],
+                expected: "target = reward + gamma * next_value"
+              }
+            }
+          },
+          en: {
+            tagline: "How much future return remains",
+            detail: "Value estimates long-term return from a state or action, so the Agent does not optimize only immediate reward.",
+            why: "It teaches delayed gratification: a smaller reward now can lead to much better future return.",
+            next: "Continue Lesson 3: Value Functions",
+            questions: {
+              choice: {
+                title: "Multiple choice: Key difference between Value and one-step Reward?",
+                options: [
+                  { text: "Value estimates long-term return; Reward is immediate feedback", ok: true, feedback: "Correct. Value is future-facing; Reward is the score received now." },
+                  { text: "Value only appears in supervised learning", ok: false, feedback: "No. Value is central to RL." },
+                  { text: "Reward is always more important than Value", ok: false, feedback: "No. Immediate reward can create short-sighted behavior." }
+                ],
+                hints: ["Think about one chess move: grabbing a piece now may not be best.", "Reward is one step; Value is expected future total.", "Value cares about the long run."],
+                expected: "Value estimates long-term return; Reward is immediate feedback."
+              },
+              short: {
+                title: "Short answer: Why can optimizing only immediate Reward make an Agent short-sighted?",
+                placeholder: "Use a game, investing, or learning example.",
+                keywords: ["long", "future", "short"],
+                hints: ["A high reward now may harm the final outcome.", "Value includes future rewards.", "Use an example like grabbing coins and dying."],
+                expected: "Immediate Reward can chase small gains; Value estimates cumulative return and avoids sacrificing the future."
+              },
+              code: {
+                title: "Tiny coding: Write pseudocode for return = reward + gamma * next_value.",
+                placeholder: "target = ...",
+                keywords: ["reward", "gamma", "value"],
+                hints: ["Start with current reward.", "Discount future value by gamma.", "Add them."],
+                expected: "target = reward + gamma * next_value"
+              }
+            }
+          }
+        },
+        policy: {
+          label: "Policy",
+          cn: {
+            tagline: "什么状态下该做什么",
+            detail: "Policy 是 Agent 的行为规则：看到某个 State 后选择哪个 Action，可以是表格规则，也可以是神经网络。",
+            why: "最终我们真正想学到的是一个好策略，而不只是背概念。",
+            next: "继续第04课 策略",
+            questions: {
+              choice: {
+                title: "选择题：Policy 最接近下面哪句话？",
+                options: [
+                  { text: "环境给出的分数", ok: false, feedback: "这是 Reward。" },
+                  { text: "状态到动作的决策规则", ok: true, feedback: "正确。Policy 负责决定看到某个状态时做什么。" },
+                  { text: "训练数据的标签", ok: false, feedback: "这是监督学习的语境，不是 Policy。" }
+                ],
+                hints: ["Policy 回答：现在该做什么？", "它可以写成 π(a|s)。", "State 进来，Action 出去。"],
+                expected: "Policy 是状态到动作的决策规则。"
+              },
+              short: {
+                title: "简答题：用一句话区分 Policy 和 Value。",
+                placeholder: "Policy 是……；Value 是……",
+                keywords: ["动作", "价值", "状态"],
+                hints: ["Policy 负责选动作。", "Value 负责评估好坏。", "一个像司机，一个像评分员。"],
+                expected: "Policy 决定在某个状态下做什么动作；Value 评估这个状态或动作长期有多好。"
+              },
+              code: {
+                title: "简单编程：写一个 epsilon-greedy policy 的伪代码。",
+                placeholder: "if random() < epsilon:\n  ...\nelse:\n  ...",
+                keywords: ["epsilon", "random", "argmax"],
+                hints: ["小概率随机探索。", "大概率选择 Q 最大的动作。", "关键词：epsilon、random、argmax。"],
+                expected: "if random() < epsilon then random action else argmax Q action"
+              }
+            }
+          },
+          en: {
+            tagline: "What to do in each state",
+            detail: "Policy is the Agent's behavior rule: given a State, choose an Action. It can be a table or a neural network.",
+            why: "The real target is learning a good policy, not memorizing terms.",
+            next: "Continue Lesson 4: Policy",
+            questions: {
+              choice: {
+                title: "Multiple choice: Which sentence best describes Policy?",
+                options: [
+                  { text: "The score from the environment", ok: false, feedback: "That is Reward." },
+                  { text: "A decision rule from states to actions", ok: true, feedback: "Correct. Policy decides what to do in a state." },
+                  { text: "The label of training data", ok: false, feedback: "That belongs to supervised learning." }
+                ],
+                hints: ["Policy answers: what should I do now?", "It can be written as π(a|s).", "State in, Action out."],
+                expected: "Policy is a decision rule from states to actions."
+              },
+              short: {
+                title: "Short answer: Distinguish Policy and Value in one sentence.",
+                placeholder: "Policy is...; Value is...",
+                keywords: ["action", "value", "state"],
+                hints: ["Policy chooses actions.", "Value evaluates goodness.", "One is a driver, one is a critic."],
+                expected: "Policy decides the action in a state; Value estimates how good that state/action is long-term."
+              },
+              code: {
+                title: "Tiny coding: Write pseudocode for an epsilon-greedy policy.",
+                placeholder: "if random() < epsilon:\n  ...\nelse:\n  ...",
+                keywords: ["epsilon", "random", "argmax"],
+                hints: ["Small probability: explore randomly.", "Otherwise choose the action with max Q.", "Keywords: epsilon, random, argmax."],
+                expected: "if random() < epsilon then random action else argmax Q action"
+              }
+            }
+          }
+        },
+        explore: {
+          label: "Explore",
+          cn: {
+            tagline: "试新动作还是用旧经验",
+            detail: "探索与利用决定 Agent 是尝试未知动作，还是选择当前看起来最好的动作。",
+            why: "没有探索，Agent 可能永远卡在局部最优；只有探索，又永远学不稳。",
+            next: "继续第05课 探索与利用",
+            questions: {
+              choice: {
+                title: "选择题：epsilon-greedy 中 epsilon 变大意味着什么？",
+                options: [
+                  { text: "更频繁随机探索", ok: true, feedback: "正确。epsilon 越大，随机试新动作的概率越高。" },
+                  { text: "更相信当前最优动作", ok: false, feedback: "这是 epsilon 变小的效果。" },
+                  { text: "奖励会自动变大", ok: false, feedback: "epsilon 只控制动作选择，不直接改变奖励。" }
+                ],
+                hints: ["epsilon 是探索概率。", "random() < epsilon 时随机选动作。", "训练早期通常探索多一些。"],
+                expected: "epsilon 越大，随机探索越频繁。"
+              },
+              short: {
+                title: "简答题：为什么不能一开始就永远选当前最优动作？",
+                placeholder: "解释局部最优、未知动作或试新店类比。",
+                keywords: ["探索", "未知", "局部"],
+                hints: ["当前最优只是目前见过的最优。", "没试过的动作可能更好。", "像总去老餐厅，永远不知道新店好不好。"],
+                expected: "因为当前最优基于有限经验，缺少探索会错过更好的未知动作，陷入局部最优。"
+              },
+              code: {
+                title: "简单编程：补全 epsilon-greedy 的 if/else 逻辑。",
+                placeholder: "if random() < epsilon:\n  action = ...\nelse:\n  action = ...",
+                keywords: ["random", "epsilon", "argmax"],
+                hints: ["if 分支做探索。", "else 分支做利用。", "利用时选 Q 最大的动作。"],
+                expected: "if random() < epsilon: random action; else: argmax Q action"
+              }
+            }
+          },
+          en: {
+            tagline: "Try new actions or exploit old knowledge",
+            detail: "Exploration vs exploitation decides whether the Agent tries unknown actions or uses the best-known action.",
+            why: "Without exploration, it can get stuck; with only exploration, it never stabilizes.",
+            next: "Continue Lesson 5: Exploration",
+            questions: {
+              choice: {
+                title: "Multiple choice: In epsilon-greedy, what does larger epsilon mean?",
+                options: [
+                  { text: "More random exploration", ok: true, feedback: "Correct. Larger epsilon means more random action trials." },
+                  { text: "More trust in the current best action", ok: false, feedback: "That happens when epsilon is smaller." },
+                  { text: "Reward automatically increases", ok: false, feedback: "Epsilon controls action selection, not reward directly." }
+                ],
+                hints: ["epsilon is exploration probability.", "When random() < epsilon, choose randomly.", "Early training often explores more."],
+                expected: "Larger epsilon means more random exploration."
+              },
+              short: {
+                title: "Short answer: Why not always choose the current best action from the beginning?",
+                placeholder: "Mention local optimum, unknown actions, or restaurant analogy.",
+                keywords: ["explore", "unknown", "local"],
+                hints: ["Current best only means best seen so far.", "Untried actions may be better.", "Always going to the same restaurant hides better ones."],
+                expected: "Because current best is based on limited experience; without exploration, better unknown actions may never be found."
+              },
+              code: {
+                title: "Tiny coding: Complete epsilon-greedy if/else logic.",
+                placeholder: "if random() < epsilon:\n  action = ...\nelse:\n  action = ...",
+                keywords: ["random", "epsilon", "argmax"],
+                hints: ["if branch explores.", "else branch exploits.", "Exploitation picks max-Q action."],
+                expected: "if random() < epsilon: random action; else: argmax Q action"
+              }
+            }
+          }
+        },
+        qlearning: {
+          label: "Q-Learning",
+          cn: {
+            tagline: "经典无模型方法",
+            detail: "Q-Learning 通过不断更新 Q(s,a) 表，学习在某个状态下做某个动作的长期价值。",
+            why: "它是理解 DQN 的入口：DQN 本质上是把 Q 表换成神经网络。",
+            next: "继续第06课 Q-Learning",
+            questions: {
+              choice: {
+                title: "选择题：Q-Learning 为什么叫无模型方法？",
+                options: [
+                  { text: "它不需要知道环境转移概率 P，只靠交互经验更新 Q", ok: true, feedback: "正确。无模型不是没有模型文件，而是不建环境动力学模型。" },
+                  { text: "它完全不需要环境", ok: false, feedback: "不对。Q-Learning 很依赖与环境交互得到样本。" },
+                  { text: "它不能计算价值", ok: false, feedback: "不对。Q-Learning 核心就是学习 Q-value。" }
+                ],
+                hints: ["Model 指的是环境模型，不是代码模型。", "它不需要提前知道 P(s'|s,a)。", "它靠试错样本更新 Q 表。"],
+                expected: "Q-Learning 不需要环境转移概率 P，只用交互经验更新 Q。"
+              },
+              short: {
+                title: "简答题：Q(s,a) 表示什么？",
+                placeholder: "用“在某状态做某动作，未来……”这句话回答。",
+                keywords: ["状态", "动作", "长期"],
+                hints: ["Q 同时绑定 state 和 action。", "它看的不是一步奖励，而是未来总回报。", "回答格式：在 s 做 a 的长期价值。"],
+                expected: "Q(s,a) 表示在状态 s 执行动作 a 后，未来能获得的预期累计回报。"
+              },
+              code: {
+                title: "简单编程：写出 Q-Learning 更新公式的伪代码。",
+                placeholder: "q[s,a] = q[s,a] + alpha * (...)",
+                keywords: ["alpha", "gamma", "max"],
+                hints: ["目标 = r + gamma * max Q(next_state, next_action)。", "误差 = 目标 - 当前 Q。", "用 alpha 控制更新步长。"],
+                expected: "Q[s,a] += alpha * (reward + gamma * max(Q[next]) - Q[s,a])"
+              }
+            }
+          },
+          en: {
+            tagline: "Classic model-free method",
+            detail: "Q-Learning updates Q(s,a) to learn the long-term value of taking an action in a state.",
+            why: "It is the gateway to DQN: DQN replaces the Q table with a neural network.",
+            next: "Continue Lesson 6: Q-Learning",
+            questions: {
+              choice: {
+                title: "Multiple choice: Why is Q-Learning model-free?",
+                options: [
+                  { text: "It does not need transition probabilities P; it learns Q from interaction", ok: true, feedback: "Correct. Model-free means no environment dynamics model." },
+                  { text: "It does not need an environment", ok: false, feedback: "No. It needs environment interaction samples." },
+                  { text: "It cannot compute value", ok: false, feedback: "No. It learns Q-values." }
+                ],
+                hints: ["Model means environment model, not a code model.", "It does not know P(s'|s,a) upfront.", "It updates Q from trial-and-error samples."],
+                expected: "Q-Learning does not need transition probabilities P; it updates Q from interaction."
+              },
+              short: {
+                title: "Short answer: What does Q(s,a) mean?",
+                placeholder: "Use: taking action a in state s will...",
+                keywords: ["state", "action", "long"],
+                hints: ["Q binds state and action.", "It is not just one-step reward.", "It estimates long-term return."],
+                expected: "Q(s,a) is the expected cumulative return after taking action a in state s."
+              },
+              code: {
+                title: "Tiny coding: Write Q-Learning update pseudocode.",
+                placeholder: "q[s,a] = q[s,a] + alpha * (...)",
+                keywords: ["alpha", "gamma", "max"],
+                hints: ["Target = r + gamma * max Q(next_state, next_action).", "Error = target - current Q.", "alpha controls step size."],
+                expected: "Q[s,a] += alpha * (reward + gamma * max(Q[next]) - Q[s,a])"
+              }
+            }
+          }
+        },
+        deep: {
+          label: "DQN / PPO",
+          cn: {
+            tagline: "深度强化学习代表",
+            detail: "DQN 用神经网络近似 Q 表；PPO 直接优化策略，是现代大规模 RL 的代表方法。",
+            why: "当状态空间太大，表格方法装不下，深度网络就负责做函数近似。",
+            next: "继续第07课 深度强化学习",
+            questions: {
+              choice: {
+                title: "选择题：DQN 解决了 Q-Learning 的哪个痛点？",
+                options: [
+                  { text: "状态太多导致 Q 表存不下", ok: true, feedback: "正确。DQN 用神经网络近似 Q(s,a)，替代巨大表格。" },
+                  { text: "完全不需要 Reward", ok: false, feedback: "不对。DQN 仍然需要 Reward 学习。" },
+                  { text: "让所有任务都不需要探索", ok: false, feedback: "不对。深度 RL 仍然需要探索策略。" }
+                ],
+                hints: ["Q 表是 state × action 的表。", "图像状态几乎无限，表格会爆炸。", "DQN = Deep Q-Network。"],
+                expected: "DQN 用神经网络近似 Q 值，解决 Q 表过大问题。"
+              },
+              short: {
+                title: "简答题：一句话区分 DQN 和 PPO。",
+                placeholder: "DQN 更像……；PPO 更像……",
+                keywords: ["Q", "策略", "神经网络"],
+                hints: ["DQN 是 value-based。", "PPO 是 policy optimization。", "一个学 Q，一个直接调策略。"],
+                expected: "DQN 用神经网络学习 Q-value；PPO 直接优化 Policy，使策略更新稳定。"
+              },
+              code: {
+                title: "简单编程：写一行伪代码表示用网络预测 Q 值并选最大动作。",
+                placeholder: "q_values = model(state)\naction = ...",
+                keywords: ["model", "argmax", "action"],
+                hints: ["网络输入 state。", "输出每个 action 的 Q 值。", "选择 argmax。"],
+                expected: "q_values = model(state); action = argmax(q_values)"
+              }
+            }
+          },
+          en: {
+            tagline: "Representative deep RL methods",
+            detail: "DQN approximates Q tables with neural networks; PPO optimizes policies directly and is common in modern large-scale RL.",
+            why: "When state spaces are too large for tables, neural networks provide function approximation.",
+            next: "Continue Lesson 7: Deep RL",
+            questions: {
+              choice: {
+                title: "Multiple choice: Which Q-Learning pain point does DQN solve?",
+                options: [
+                  { text: "Too many states for a Q table", ok: true, feedback: "Correct. DQN approximates Q(s,a) with a neural network." },
+                  { text: "No reward needed anymore", ok: false, feedback: "No. DQN still learns from Reward." },
+                  { text: "All exploration becomes unnecessary", ok: false, feedback: "No. Deep RL still needs exploration." }
+                ],
+                hints: ["A Q table is state × action.", "Image-like states make tables explode.", "DQN = Deep Q-Network."],
+                expected: "DQN uses a neural network to approximate Q values when Q tables are too large."
+              },
+              short: {
+                title: "Short answer: Distinguish DQN and PPO in one sentence.",
+                placeholder: "DQN is like...; PPO is like...",
+                keywords: ["Q", "policy", "network"],
+                hints: ["DQN is value-based.", "PPO is policy optimization.", "One learns Q; one adjusts policy directly."],
+                expected: "DQN learns Q-values with a neural network; PPO directly optimizes the policy with stable updates."
+              },
+              code: {
+                title: "Tiny coding: Predict Q values with a network and choose the best action.",
+                placeholder: "q_values = model(state)\naction = ...",
+                keywords: ["model", "argmax", "action"],
+                hints: ["Input state into the network.", "Output Q values for actions.", "Pick argmax."],
+                expected: "q_values = model(state); action = argmax(q_values)"
+              }
+            }
+          }
+        }
+      };
+
+      function currentConcept() {
+        return concepts[activeTopic][lang];
+      }
+
+      function currentQuestion() {
+        return currentConcept().questions[activeMode];
+      }
+
+      function resetAnswerState() {
+        hintIndex = 0;
+        selectedChoice = -1;
+        lastResult = { status: "unanswered", answer: "-", feedback: "", missing: [] };
+        shortAnswer.value = "";
+        codeAnswer.value = "";
+        hintBox.classList.remove("show");
+        hintBox.textContent = lang === "cn" ? "点击提示，会逐步展开解题线索。" : "Click hints to reveal guidance step by step.";
+        quizFeedback.textContent = lang === "cn" ? "先选择知识卡和题型，再作答。提示可以多次点击。" : "Choose a concept and question type, then answer. Hints can be clicked repeatedly.";
+        quizFeedback.className = "feedback";
+      }
+
+      function renderConcept() {
+        mapNodes.forEach(function(node) {
+          var topic = node.getAttribute("data-topic");
+          var concept = concepts[topic][lang];
+          node.classList.toggle("hot", topic === activeTopic);
+          node.querySelector("strong").textContent = concepts[topic].label;
+          node.querySelector("span").textContent = concept.tagline;
+        });
+
+        var label = concepts[activeTopic].label;
+        var c = currentConcept();
+        conceptDetail.innerHTML =
+          "<strong>" + (lang === "cn" ? "当前选中：" : "Selected: ") + label + "</strong>" +
+          "<p>" + c.detail + "</p>" +
+          "<p>" + c.why + "</p>";
+      }
+
+      function renderQuestion() {
+        var q = currentQuestion();
+        quizTitle.textContent = q.title;
+        choiceArea.innerHTML = "";
+        shortArea.classList.toggle("hidden", activeMode !== "short");
+        codeArea.classList.toggle("hidden", activeMode !== "code");
+        choiceArea.classList.toggle("hidden", activeMode !== "choice");
+        shortAnswer.placeholder = q.placeholder || "";
+        codeAnswer.placeholder = q.placeholder || "";
+        checkButton.textContent = lang === "cn" ? "提交评判" : "Check answer";
+        hintButton.textContent = lang === "cn" ? "提示 1" : "Hint 1";
+
+        modeButtons.forEach(function(btn) {
+          var mode = btn.getAttribute("data-mode");
+          btn.textContent = modeLabels[lang][mode];
+          btn.classList.toggle("active", mode === activeMode);
+        });
+
+        if (activeMode === "choice") {
+          q.options.forEach(function(opt, idx) {
+            var btn = document.createElement("button");
+            btn.className = "quiz-option";
+            btn.type = "button";
+            btn.textContent = opt.text;
+            btn.addEventListener("click", function() {
+              selectedChoice = idx;
+              gradeChoice(idx);
+            });
+            choiceArea.appendChild(btn);
+          });
+        }
+        updateRecord();
+      }
+
+      function gradeChoice(idx) {
+        var q = currentQuestion();
+        var options = Array.prototype.slice.call(choiceArea.querySelectorAll(".quiz-option"));
+        options.forEach(function(opt) { opt.classList.remove("correct", "wrong"); });
+        var picked = q.options[idx];
+        options[idx].classList.add(picked.ok ? "correct" : "wrong");
+        lastResult = {
+          status: picked.ok ? "correct" : "wrong",
+          answer: picked.text,
+          feedback: picked.feedback,
+          missing: picked.ok ? [] : [q.expected]
+        };
+        quizFeedback.textContent = picked.feedback;
+        quizFeedback.className = "feedback " + (picked.ok ? "ok" : "no");
+        updateRecord();
+      }
+
+      function gradeTextAnswer(text) {
+        var q = currentQuestion();
+        var lower = text.toLowerCase();
+        var hits = [];
+        var missing = [];
+        q.keywords.forEach(function(keyword) {
+          if (lower.indexOf(keyword.toLowerCase()) !== -1) hits.push(keyword);
+          else missing.push(keyword);
+        });
+        var status = hits.length >= Math.max(2, q.keywords.length - 1) ? "correct" : (hits.length > 0 ? "partial" : "wrong");
+        var feedback = "";
+        if (status === "correct") {
+          feedback = lang === "cn" ? "很好，关键要点基本齐了。" : "Good. The key points are mostly covered.";
+        } else if (status === "partial") {
+          feedback = (lang === "cn" ? "方向对，但还缺这些关键词：" : "Good direction, but missing: ") + missing.join(", ");
+        } else {
+          feedback = lang === "cn" ? "还没命中核心。先点提示，再补上关键概念。" : "The core idea is still missing. Use hints, then add the key concepts.";
+        }
+        lastResult = {
+          status: status,
+          answer: text || "-",
+          feedback: feedback,
+          missing: missing
+        };
+        quizFeedback.textContent = feedback + " " + (lang === "cn" ? "参考要点：" : "Expected: ") + q.expected;
+        quizFeedback.className = "feedback " + (status === "correct" ? "ok" : (status === "partial" ? "partial" : "no"));
+        updateRecord();
+      }
+
+      function showNextHint() {
+        var q = currentQuestion();
+        if (hintIndex < q.hints.length) hintIndex += 1;
+        var shown = q.hints.slice(0, hintIndex).map(function(hint, idx) {
+          return (idx + 1) + ". " + hint;
+        }).join("\n");
+        hintBox.textContent = shown || (lang === "cn" ? "暂无提示。" : "No hint yet.");
+        hintBox.classList.add("show");
+        hintButton.textContent = (lang === "cn" ? "提示 " : "Hint ") + Math.min(hintIndex + 1, q.hints.length) + "/" + q.hints.length;
+        updateRecord();
+      }
+
+      function checkedDetails(done) {
+        return checkItems.filter(function(item) {
+          return item.classList.contains("done") === done;
+        }).map(function(item) {
+          return item.textContent.trim();
+        });
+      }
+
+      function updateRecord() {
+        var checked = checkedDetails(true);
+        var unchecked = checkedDetails(false);
+        var quizDone = lastResult.status !== "unanswered";
+        var quizScore = lastResult.status === "correct" ? 1 : 0;
+        var total = 1 + checkItems.length;
+        var done = (quizDone ? 1 : 0) + checked.length;
+        var percent = Math.round(done * 100 / total);
+        var q = currentQuestion();
+        var c = currentConcept();
+        var hintsUsed = hintIndex + "/" + q.hints.length;
+
+        recordPercent.textContent = percent + "% complete";
+        recordSummary.textContent = (lang === "cn" ? "完成度: " : "Completion: ") + percent + "% | " +
+          (lang === "cn" ? "模块: " : "Concept: ") + concepts[activeTopic].label + " | " +
+          (lang === "cn" ? "题型: " : "Mode: ") + modeLabels[lang][activeMode] + " | " +
+          (lang === "cn" ? "测验: " : "Quiz: ") + quizScore + "/1 | " +
+          (lang === "cn" ? "自检: " : "Checklist: ") + checked.length + "/" + checkItems.length + " | " +
+          (lang === "cn" ? "提示: " : "Hints: ") + hintsUsed;
+
+        var statusText = {
+          cn: { unanswered: "未提交", correct: "正确", partial: "部分正确", wrong: "错误" },
+          en: { unanswered: "Unanswered", correct: "Correct", partial: "Partially correct", wrong: "Wrong" }
+        };
+        var usedHints = q.hints.slice(0, hintIndex);
+        var report = lang === "cn"
+          ? "# 学习记录 — 强化学习 第01课 全局地图\n" +
+            "- 当前模块: " + concepts[activeTopic].label + " — " + c.tagline + "\n" +
+            "- 题型: " + modeLabels[lang][activeMode] + "\n" +
+            "- 题目: " + q.title + "\n" +
+            "- 作答状态: " + statusText.cn[lastResult.status] + "\n" +
+            "- 我的答案: " + lastResult.answer + "\n" +
+            "- 正确要点: " + q.expected + "\n" +
+            "- 诊断反馈: " + (lastResult.feedback || "尚未提交，AI 会等待你的回答。") + "\n" +
+            "- 缺失关键词/薄弱点: " + (lastResult.missing && lastResult.missing.length ? lastResult.missing.join(", ") : "暂无") + "\n" +
+            "- 已查看提示: " + hintsUsed + (usedHints.length ? "\n  - " + usedHints.join("\n  - ") : "\n  - 未查看") + "\n" +
+            "- 已勾选自检 (" + checked.length + "/" + checkItems.length + "): " + (checked.length ? "\n  - " + checked.join("\n  - ") : "无") + "\n" +
+            "- 未勾选自检: " + (unchecked.length ? "\n  - " + unchecked.join("\n  - ") : "无") + "\n" +
+            "- 下一步: " + c.next
+          : "# Learning Record — Reinforcement Learning Lesson 01 Global Map\n" +
+            "- Current concept: " + concepts[activeTopic].label + " — " + c.tagline + "\n" +
+            "- Question type: " + modeLabels[lang][activeMode] + "\n" +
+            "- Question: " + q.title + "\n" +
+            "- Status: " + statusText.en[lastResult.status] + "\n" +
+            "- My answer: " + lastResult.answer + "\n" +
+            "- Expected points: " + q.expected + "\n" +
+            "- Diagnostic feedback: " + (lastResult.feedback || "Not submitted yet. AI should wait for the answer.") + "\n" +
+            "- Missing keywords / weak spots: " + (lastResult.missing && lastResult.missing.length ? lastResult.missing.join(", ") : "None") + "\n" +
+            "- Hints viewed: " + hintsUsed + (usedHints.length ? "\n  - " + usedHints.join("\n  - ") : "\n  - None") + "\n" +
+            "- Checked self-checks (" + checked.length + "/" + checkItems.length + "): " + (checked.length ? "\n  - " + checked.join("\n  - ") : "None") + "\n" +
+            "- Unchecked self-checks: " + (unchecked.length ? "\n  - " + unchecked.join("\n  - ") : "None") + "\n" +
+            "- Next: " + c.next;
+        recordPreview.textContent = report;
+      }
+
+      function selectTopic(topic) {
+        activeTopic = topic;
+        resetAnswerState();
+        renderConcept();
+        renderQuestion();
+      }
+
+      function setMode(mode) {
+        activeMode = mode;
+        resetAnswerState();
+        renderQuestion();
+      }
+
+      function setLanguage(next) {
+        lang = next;
+        langCn.classList.toggle("active", lang === "cn");
+        langEn.classList.toggle("active", lang === "en");
+        langPill.textContent = lang === "cn" ? "中文模式" : "English mode";
+        crumb.textContent = lang === "cn" ? "强化学习 / 第01课" : "Reinforcement Learning / Lesson 01";
+        document.documentElement.lang = lang === "cn" ? "zh-CN" : "en";
+        tabPanel.textContent = panels.user[lang];
+        copyRecord.textContent = copyLabels[lang].ready;
+        resetAnswerState();
+        renderConcept();
+        renderQuestion();
+      }
+
+      mapNodes.forEach(function(node) {
+        node.addEventListener("click", function() {
+          selectTopic(node.getAttribute("data-topic"));
+        });
+      });
+
+      modeButtons.forEach(function(btn) {
+        btn.addEventListener("click", function() {
+          setMode(btn.getAttribute("data-mode"));
+        });
+      });
+
+      checkButton.addEventListener("click", function() {
+        if (activeMode === "choice") {
+          if (selectedChoice === -1) {
+            quizFeedback.textContent = lang === "cn" ? "先选择一个选项，也可以先点提示。" : "Choose an option first, or use hints.";
+            quizFeedback.className = "feedback partial";
+          } else {
+            gradeChoice(selectedChoice);
+          }
+        } else if (activeMode === "short") {
+          gradeTextAnswer(shortAnswer.value.trim());
+        } else {
+          gradeTextAnswer(codeAnswer.value.trim());
+        }
+      });
+
+      hintButton.addEventListener("click", showNextHint);
+
+      checkItems.forEach(function(item) {
+        item.addEventListener("click", function() {
+          updateRecord();
+        });
+      });
+
+      tabButtons.forEach(function(btn) {
+        btn.addEventListener("click", function() {
+          tabPanel.textContent = panels[btn.getAttribute("data-tab")][lang];
+        });
+      });
+
+      langCn.addEventListener("click", function() { setLanguage("cn"); });
+      langEn.addEventListener("click", function() { setLanguage("en"); });
+
+      copyRecord.addEventListener("click", function() {
+        var text = recordPreview.textContent;
+        function fallbackCopy() {
+          var area = document.createElement("textarea");
+          area.value = text;
+          document.body.appendChild(area);
+          area.select();
+          document.execCommand("copy");
+          document.body.removeChild(area);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).catch(fallbackCopy);
+        } else {
+          fallbackCopy();
+        }
+        copyRecord.textContent = copyLabels[lang].done;
+        setTimeout(function() {
+          copyRecord.textContent = copyLabels[lang].ready;
+        }, 1500);
+      });
+
+      setLanguage("cn");
     })();
   </script>
 </body>
