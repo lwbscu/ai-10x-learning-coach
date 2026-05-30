@@ -8,7 +8,7 @@
 
 **Turn Claude Code/Codex into a patient, adaptive domain tutor — it draws knowledge maps, generates interactive HTML lessons, checks mastery, logs mistakes, and re-teaches weak spots until you actually understand.**
 
-📖 [中文文档](README.cn.md) | [English Docs](README.en.md) | [使用示例 Demo](https://zcnkmpjy7ukv.feishu.cn/wiki/RuvAwj5uFiNh7ZkUlBvcz6lxnTe)
+📖 [中文文档](README.cn.md) | [English Docs](README.en.md) | [知乎 Demo](https://zhuanlan.zhihu.com/p/2044006519017035140) | [掘金 Demo](https://juejin.cn/spost/7645137278329126964)
 
 ---
 
@@ -113,6 +113,12 @@ ai-10x-learning-coach/
 - 不会自动发起网络请求
 - 所有学习文件生成在本地工作空间内
 - 安装前请检查 `SKILL.md` 确认行为符合预期
+
+---
+
+## 灵感来源
+
+[如何用 Claude Code 开启 10 倍学习法？](https://mp.weixin.qq.com/s/DF2-X_iXMMz6e28v3Da3EQ) — 本 Skill 的核心理念源于此文提炼的 AI 学习方法论。
 
 ---
 
