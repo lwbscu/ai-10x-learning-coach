@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code Skill](https://img.shields.io/badge/Claude%20Code-Skill-38bdf8)](https://claude.com/claude-code)
-[![Version](https://img.shields.io/badge/version-2.1-a78bfa)]()
+[![Version](https://img.shields.io/badge/version-2.2-a78bfa)]()
 
 **把 Claude Code/Codex 变成一个耐心的、自适应的领域导师 —— 它会画知识地图、生成交互式 HTML 课件、检查掌握程度、记录错题、针对性复教，直到你真正学会。**
 
@@ -51,7 +51,7 @@ git clone https://github.com/lwbscu/ai-10x-learning-coach.git ~/.claude/skills/a
 
 ---
 
-## 核心特性 (v2.1)
+## 核心特性 (v2.2)
 
 | 特性 | 说明 |
 |------|------|
@@ -59,8 +59,18 @@ git clone https://github.com/lwbscu/ai-10x-learning-coach.git ~/.claude/skills/a
 | 📚 交互式 HTML 课件 | 每章一个自包含 HTML：多视角切换、即学即练、折叠深读、悬浮注释 |
 | ✅ 掌握检查 | 2-4 题自动评判：正确 / 部分正确 / 概念误区 / 边界不清 / 应用脱节 |
 | 💾 学习记录导出 | 一键复制 Markdown 报告给 AI，或下载 JSON 供后续恢复 |
-| 📋 防迷路导航 | 完结卡片 + 自检清单 + 底部悬浮提示条 + 下一步指令 |
+| 📋 防迷路导航 | 完结卡片 + 自检清单 + 每项复习回跳 + 底部悬浮提示条 + 下一步指令 |
 | 📊 错题追踪 | 记录每个理解偏差，针对性复测，进度可随时恢复 |
+
+### v2.2 新增：自检清单一键回跳复习
+
+每个自检项都必须带 `复习 →` 链接，指向当前 HTML 页面中对应的讲解段落。学习者忘了某一点时，不需要翻目录找位置，直接从清单回到原讲解处。
+
+```text
+自检没把握 -> 点击“复习 →” -> 回到对应讲解 -> 再勾选/再导出学习记录
+```
+
+这一版也要求学习记录导出时只保留自检文本和复习锚点，不把 `复习 →` 这类按钮文案混进学习报告。
 
 ---
 
@@ -73,7 +83,7 @@ git clone https://github.com/lwbscu/ai-10x-learning-coach.git ~/.claude/skills/a
 - 🔀 用户/业务/工程多视角 Tab 切换
 - 🧪 嵌入式即学即练（选对变绿、选错变红 + 诊断反馈）
 - 💬 关键词悬浮注释
-- 🏁 完结卡片：自检清单 + 学习记录面板 + 下一步指令
+- 🏁 完结卡片：自检清单 + 每项复习回跳 + 学习记录面板 + 下一步指令
 - 🌙 暗色主题，响应式布局
 
 ---

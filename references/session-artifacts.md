@@ -124,7 +124,7 @@ Lesson 1 is not a Markdown note. It is the first interactive HTML lesson and MUS
 - a glossary/term quick-reference section
 - beginner traps and what to ignore at first
 - embedded mastery check questions in the same page
-- end-of-lesson self-check checklist and next-step command
+- end-of-lesson self-check checklist with review links and next-step command
 
 ---
 
@@ -207,8 +207,9 @@ For every lesson, including Lesson 1, generate an interactive HTML page. Below i
         data-concept: tested concept or skill
         data-correct: correct answer text or key
         data-retry: what to review if wrong
+        data-review-target: section id or hash to revisit if wrong, such as "#s2"
       -->
-      <div class="mini-quiz" id="mq1" data-question="[Question text]" data-concept="[Concept]" data-correct="[Correct answer]" data-retry="[Review suggestion]">
+      <div class="mini-quiz" id="mq1" data-question="[Question text]" data-concept="[Concept]" data-correct="[Correct answer]" data-retry="[Review suggestion]" data-review-target="#s1">
         <!-- .opt answer options and #mq1-explain feedback -->
       </div>
     </div>
@@ -220,8 +221,16 @@ For every lesson, including Lesson 1, generate an interactive HTML page. Below i
 
       <!-- [REQUIRED] Self-check checklist -->
       <div class="checklist">
-        <span class="check-item" onclick="toggleCheck(this)">☐ [Check item 1]</span>
-        <span class="check-item" onclick="toggleCheck(this)">☐ [Check item 2]</span>
+        <span class="check-item" onclick="toggleCheck(this)">
+          <span class="check-status">☐</span>
+          <span class="check-text">[Check item 1]</span>
+          <a class="review-link" href="#s1" onclick="event.stopPropagation();" title="[Review section 1]">复习 →</a>
+        </span>
+        <span class="check-item" onclick="toggleCheck(this)">
+          <span class="check-status">☐</span>
+          <span class="check-text">[Check item 2]</span>
+          <a class="review-link" href="#s2" onclick="event.stopPropagation();" title="[Review section 2]">复习 →</a>
+        </span>
         <!-- ... -->
       </div>
 
@@ -313,12 +322,13 @@ For every lesson, including Lesson 1, generate an interactive HTML page. Below i
 
   // Self-check checklist toggle
   function toggleCheck(el) {
+    var status = el.querySelector(".check-status");
     if (el.classList.contains("done")) {
       el.classList.remove("done");
-      el.textContent = el.textContent.replace("☑", "☐");
+      if (status) status.textContent = "☐";
     } else {
       el.classList.add("done");
-      el.textContent = el.textContent.replace("☐", "☑");
+      if (status) status.textContent = "☑";
     }
     saveRecord();
     updateRecordUI();
@@ -342,14 +352,18 @@ For every lesson, including Lesson 1, generate an interactive HTML page. Below i
         choiceText: chosen ? chosen.textContent.trim() : "",
         correctAnswer: q.getAttribute("data-correct") || "",
         feedback: explain ? explain.textContent.trim() : "",
-        retrySuggestion: q.getAttribute("data-retry") || ""
+        retrySuggestion: q.getAttribute("data-retry") || "",
+        reviewTarget: q.getAttribute("data-review-target") || ""
       });
     });
     var checklist = [];
     document.querySelectorAll(".check-item").forEach(function(c) {
+      var textEl = c.querySelector(".check-text");
+      var reviewEl = c.querySelector(".review-link");
       checklist.push({
-        text: c.textContent.replace("☑", "").replace("☐", "").trim(),
-        checked: c.classList.contains("done")
+        text: textEl ? textEl.textContent.trim() : c.textContent.replace("☑", "").replace("☐", "").trim(),
+        checked: c.classList.contains("done"),
+        reviewTarget: reviewEl ? reviewEl.getAttribute("href") : ""
       });
     });
     var answered = quizItems.filter(function(q) { return q.answered; }).length;
@@ -408,8 +422,9 @@ For every lesson, including Lesson 1, generate an interactive HTML page. Below i
       }
       document.querySelectorAll(".check-item").forEach(function(c, idx) {
         if (record.checklist[idx] && record.checklist[idx].checked && !c.classList.contains("done")) {
+          var status = c.querySelector(".check-status");
           c.classList.add("done");
-          c.textContent = c.textContent.replace("☐", "☑");
+          if (status) status.textContent = "☑";
         }
       });
     } catch (e) {}
@@ -451,7 +466,7 @@ For every lesson, including Lesson 1, generate an interactive HTML page. Below i
     lines.push("");
     lines.push(isZh ? "## 自检清单" : "## Self-Check Checklist");
     record.checklist.forEach(function(c) {
-      lines.push("- [" + (c.checked ? "x" : " ") + "] " + c.text);
+      lines.push("- [" + (c.checked ? "x" : " ") + "] " + c.text + (c.reviewTarget ? " (" + (isZh ? "复习: " : "review: ") + c.reviewTarget + ")" : ""));
     });
     lines.push("");
     lines.push(isZh ? "## 薄弱点" : "## Weak Spots");
@@ -509,8 +524,9 @@ For every lesson, including Lesson 1, generate an interactive HTML page. Below i
       o.classList.remove("chosen-correct", "chosen-wrong");
     });
     document.querySelectorAll(".check-item").forEach(function(c) {
+      var status = c.querySelector(".check-status");
       c.classList.remove("done");
-      if (c.textContent.indexOf("☑") !== -1) c.textContent = c.textContent.replace("☑", "☐");
+      if (status) status.textContent = "☐";
     });
     try { localStorage.removeItem(LESSON_RECORD_KEY); } catch (e) {}
     // Reset tabs to first
@@ -570,6 +586,7 @@ For every lesson, including Lesson 1, generate an interactive HTML page. Below i
 | `.loop-diagram`, `.loop-node`, `.loop-arrow` | Agent-Environment flow |
 | `.end-card` | Dashed-border completion card |
 | `.checklist`, `.check-item`, `.check-item.done` | Self-assessment checklist |
+| `.check-status`, `.check-text`, `.review-link` | Checklist status, clean export text, and same-page review link |
 | `.record-panel`, `#recordSummary` | Learning record summary and AI handoff buttons |
 | `.next-cmd` | Monospace code block for next command |
 | `.bottom-bar` | Floating slide-up bar on scroll-to-end |
@@ -583,8 +600,9 @@ Every lesson must support both local persistence and AI handoff:
 
 - Save state to `localStorage` on every quiz answer and checklist toggle.
 - Restore saved quiz/checklist state when the page is opened again.
-- Provide a copy button that copies a detailed Markdown report to clipboard. The report must include every quiz question, selected answer, correct/wrong status, correct answer when available, feedback, retry suggestion, all checked/unchecked self-check items, weak spots, and next command.
+- Provide a copy button that copies a detailed Markdown report to clipboard. The report must include every quiz question, selected answer, correct/wrong status, correct answer when available, feedback, retry suggestion, all checked/unchecked self-check items, each item's review target, weak spots, and next command.
 - Provide a download button for a portable JSON file.
+- Checklist export MUST read `.check-text`, not the entire `.check-item`, so labels like `复习 →` / `Review →` do not pollute the learning record.
 - Chinese mode download name: `学习记录.json`.
 - English mode download name: `learning-record.json`.
 
@@ -616,13 +634,15 @@ Required JSON shape:
       "choiceText": "监督学习也可以试错",
       "correctAnswer": "RL learns from interaction and delayed reward; supervised learning learns from labeled answers.",
       "feedback": "你混淆了标签监督和奖励反馈。",
-      "retrySuggestion": "复习数据来源、反馈形式、单步预测 vs 序列决策。"
+      "retrySuggestion": "复习数据来源、反馈形式、单步预测 vs 序列决策。",
+      "reviewTarget": "#s2"
     }
   ],
   "checklist": [
     {
       "text": "我能解释 RL 和监督学习的区别",
-      "checked": true
+      "checked": true,
+      "reviewTarget": "#s2"
     }
   ],
   "weakSpots": ["mq1"],

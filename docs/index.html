@@ -428,6 +428,26 @@
       cursor: pointer;
     }
 
+    .check-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      text-align: left;
+    }
+
+    .check-label {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .review-mini {
+      flex: 0 0 auto;
+      color: var(--cyan);
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
     .tab-btn.active { border-color: var(--cyan); color: var(--cyan); }
 
     .tab-panel {
@@ -681,7 +701,7 @@
     <header class="hero" id="top">
       <canvas id="mapCanvas" aria-hidden="true"></canvas>
       <div class="hero-content">
-        <span class="kicker"><span class="status-dot"></span> Claude Code Skill · v2.1 · interactive learning system</span>
+        <span class="kicker"><span class="status-dot"></span> Claude Code Skill · v2.2 · interactive learning system</span>
         <h1 id="heroTitle">把 AI 从答题机器变成真正的学习教练</h1>
         <p class="hero-subtitle" id="heroSubtitle">AI 10x Learning Coach 会先画知识地图，再逐章生成交互式 HTML 课件，通过测验和自检记录你的掌握情况，并把薄弱点交还给 AI 继续复教。</p>
         <div class="hero-actions">
@@ -702,7 +722,7 @@
       <div class="inner">
         <div class="section-head">
           <h2 id="demoTitle">不是 README 里的承诺，而是可感知的学习体验</h2>
-          <p id="demoIntro">下面这个小演示模拟了真实课件的关键环节：语言选择、知识地图、多视角解释、即时测验、自检清单和可复制给 AI 的学习记录。</p>
+          <p id="demoIntro">下面这个小演示模拟了真实课件的关键环节：语言选择、知识地图、多视角解释、即时测验、可回跳复习的自检清单和可复制给 AI 的学习记录。</p>
         </div>
 
         <div class="simulator">
@@ -722,7 +742,7 @@
               </div>
               <div class="flow-step">
                 <div class="step-index">3</div>
-                <div><h3 id="flow3Title">交互课件</h3><p id="flow3Body">每课都是 HTML：tabs、测验、清单、记录面板。</p></div>
+                <div><h3 id="flow3Title">交互课件</h3><p id="flow3Body">每课都是 HTML：tabs、测验、可回跳复习的清单、记录面板。</p></div>
               </div>
               <div class="flow-step">
                 <div class="step-index">4</div>
@@ -796,10 +816,10 @@
                   </div>
 
                   <div class="checks" aria-label="Self-check checklist">
-                    <button class="check-item" type="button">我能解释 Agent / Environment / Reward</button>
-                    <button class="check-item" type="button">我能说出 MDP 的作用</button>
-                    <button class="check-item" type="button">我知道为什么先学全局地图</button>
-                    <button class="check-item" type="button">我能把学习记录交给 AI</button>
+                    <button class="check-item" type="button"><span class="check-label">我能解释 Agent / Environment / Reward</span><span class="review-mini">复习 →</span></button>
+                    <button class="check-item" type="button"><span class="check-label">我能说出 MDP 的作用</span><span class="review-mini">复习 →</span></button>
+                    <button class="check-item" type="button"><span class="check-label">我知道为什么先学全局地图</span><span class="review-mini">复习 →</span></button>
+                    <button class="check-item" type="button"><span class="check-label">我能把学习记录交给 AI</span><span class="review-mini">复习 →</span></button>
                   </div>
 
                   <div class="record-box">
@@ -830,7 +850,7 @@
           <div class="feature-card">
             <div class="feature-label">HTML lessons</div>
             <h3 id="feature1Title">从第 1 课开始就是网页课件</h3>
-            <p id="feature1Body">每课都是自包含 HTML，带目录、tabs、折叠深读、即时测验、自检清单和底部导航。</p>
+            <p id="feature1Body">每课都是自包含 HTML，带目录、tabs、折叠深读、即时测验、带复习回跳的自检清单和底部导航。</p>
           </div>
           <div class="feature-card">
             <div class="feature-label">Mastery checks</div>
@@ -903,7 +923,7 @@
         </div>
         <div class="trust">
           <div class="trust-item"><strong>MIT</strong>Open-source license</div>
-          <div class="trust-item"><strong>v2.1</strong>Learning record export</div>
+          <div class="trust-item"><strong>v2.2</strong>Checklist review links</div>
           <div class="trust-item"><strong>Claude Code</strong>Skill-first workflow</div>
           <div class="trust-item"><strong>Static</strong>No build dependency</div>
         </div>
@@ -1051,13 +1071,13 @@
           metricRecord: "学习记录可导出",
           metricRetest: "错题驱动复教",
           demoTitle: "不是 README 里的承诺，而是可感知的学习体验",
-          demoIntro: "下面这个小演示模拟了真实课件的关键环节：语言选择、知识地图、多视角解释、即时测验、自检清单和可复制给 AI 的学习记录。",
+          demoIntro: "下面这个小演示模拟了真实课件的关键环节：语言选择、知识地图、多视角解释、即时测验、可回跳复习的自检清单和可复制给 AI 的学习记录。",
           flow1Title: "校准学习者",
           flow1Body: "背景、目标、时间预算和语言偏好先确定。",
           flow2Title: "全局地图",
           flow2Body: "先知道这门知识的结构，再进入细节。",
           flow3Title: "交互课件",
-          flow3Body: "每课都是 HTML：tabs、测验、清单、记录面板。",
+          flow3Body: "每课都是 HTML：tabs、测验、可回跳复习的清单、记录面板。",
           flow4Title: "错题复教",
           flow4Body: "把学习记录交给 AI，让下一课从薄弱点开始。",
           lessonFileTitle: "第01课-全局地图 / 课件.html",
@@ -1068,7 +1088,7 @@
           featuresTitle: "它解决的是“我看过了，但没学会”",
           featuresIntro: "Skill 的价值不只是生成内容，而是强制走完从地图、互动、检测到复教的闭环。",
           feature1Title: "从第 1 课开始就是网页课件",
-          feature1Body: "每课都是自包含 HTML，带目录、tabs、折叠深读、即时测验、自检清单和底部导航。",
+          feature1Body: "每课都是自包含 HTML，带目录、tabs、折叠深读、即时测验、带复习回跳的自检清单和底部导航。",
           feature2Title: "不会让模糊理解直接进入下一章",
           feature2Body: "测验结果会被诊断为正确、部分正确、概念误区、边界不清或应用脱节。",
           feature3Title: "网页行为可以交回给 AI",
@@ -1119,13 +1139,13 @@
           metricRecord: "Exportable learning records",
           metricRetest: "Mistake-driven reteaching",
           demoTitle: "Not a README promise, but a visible learning experience",
-          demoIntro: "This mini demo mirrors the real course flow: language choice, knowledge map, multi-perspective explanation, instant quiz, self-check list, and a record you can hand back to AI.",
+          demoIntro: "This mini demo mirrors the real course flow: language choice, knowledge map, multi-perspective explanation, instant quiz, a self-check list with review links, and a record you can hand back to AI.",
           flow1Title: "Calibrate the learner",
           flow1Body: "Background, goal, time budget, and language preference come first.",
           flow2Title: "Global map",
           flow2Body: "Understand the structure before entering the details.",
           flow3Title: "Interactive lessons",
-          flow3Body: "Every lesson is HTML with tabs, quizzes, checklists, and a record panel.",
+          flow3Body: "Every lesson is HTML with tabs, quizzes, reviewable checklists, and a record panel.",
           flow4Title: "Mistake-driven reteaching",
           flow4Body: "Give the learning record back to AI so the next lesson starts from weak spots.",
           lessonFileTitle: "lesson-01-global-map / index.html",
@@ -1136,7 +1156,7 @@
           featuresTitle: "It solves “I read it, but I did not learn it”",
           featuresIntro: "The Skill is not just content generation. It enforces a loop from map to interaction, mastery check, and reteaching.",
           feature1Title: "Lesson 1 is already an interactive web page",
-          feature1Body: "Each lesson is self-contained HTML with navigation, tabs, deep dives, instant quizzes, self-checks, and bottom guidance.",
+          feature1Body: "Each lesson is self-contained HTML with navigation, tabs, deep dives, instant quizzes, self-checks with review links, and bottom guidance.",
           feature2Title: "Fuzzy understanding does not pass silently",
           feature2Body: "Quiz answers are diagnosed as correct, partially correct, misconception, missing boundary, or application gap.",
           feature3Title: "Page behavior can go back to AI",
@@ -1707,7 +1727,10 @@
         setHtml("triggerCommand", t.triggerCommand);
 
         checkItems.forEach(function(item, index) {
-          item.textContent = t.checks[index];
+          var label = item.querySelector(".check-label");
+          var review = item.querySelector(".review-mini");
+          if (label) label.textContent = t.checks[index];
+          if (review) review.textContent = lang === "cn" ? "复习 →" : "Review →";
         });
 
         langCn.textContent = "中文";
@@ -1870,7 +1893,8 @@
         return checkItems.filter(function(item) {
           return item.classList.contains("done") === done;
         }).map(function(item) {
-          return item.textContent.trim();
+          var label = item.querySelector(".check-label");
+          return label ? label.textContent.trim() : item.textContent.trim();
         });
       }
 
@@ -1991,6 +2015,13 @@
         item.addEventListener("click", function() {
           item.classList.toggle("done");
           updateRecord();
+        });
+      });
+
+      Array.prototype.slice.call(document.querySelectorAll(".review-mini")).forEach(function(link) {
+        link.addEventListener("click", function(event) {
+          event.stopPropagation();
+          conceptDetail.scrollIntoView({ behavior: "smooth", block: "center" });
         });
       });
 

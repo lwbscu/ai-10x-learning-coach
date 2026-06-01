@@ -1,6 +1,6 @@
 ---
 name: ai-10x-learning-coach
-description: Personalized AI learning coach for Claude Code/Codex. Use when the user wants to learn an unfamiliar domain, build a 1-2 week learning plan, turn articles/docs/repos into a curriculum, get "10x learning" guidance, receive chapter-by-chapter teaching, create concept maps, run mastery quizzes, or use an agent as a tutor that adapts to the learner's background and mistakes.
+description: Personalized AI learning coach for Claude Code/Codex. Use when the user wants to learn an unfamiliar domain, build a 1-2 week learning plan, turn articles/docs/repos into a curriculum, get "10x learning" guidance, receive chapter-by-chapter interactive HTML teaching, create concept maps, run mastery quizzes, generate self-check review links, or use an agent as a tutor that adapts to the learner's background and mistakes.
 ---
 
 # AI 10x Learning Coach / AI 10倍学习教练
@@ -51,6 +51,7 @@ This skill is distilled from the workflow in the article "如何用 Claude Code 
 - Do not advance after "I explained it"; advance only after the learner demonstrates understanding.
 - Keep a mistake log and use it to adapt future explanations and questions.
 - Avoid generating a giant complete textbook in one response.
+- **v2.2 review loop:** every self-check checklist item MUST include a review link back to the exact explanation section in the same HTML page. Quizzes and weak spots SHOULD also include review targets when possible.
 
 ---
 
@@ -152,12 +153,13 @@ Each HTML lesson MUST include:
 - **MDP card click-to-scroll** — when using concept tuple cards, clicking scrolls to the detail section. Use manual position calculation (`getBoundingClientRect().top + pageYOffset - offset`) instead of `scroll-margin-top` for cross-browser reliability.
 - **Learning record persistence** — save quiz results, checklist state, viewed lesson, completion percentage, weak spots, and last updated time to `localStorage` under a stable key such as `ai10x:<topic>:lesson-01`.
 - **Detailed diagnostic records** — each mini-quiz MUST expose enough metadata for later AI diagnosis: question text, tested concept, chosen answer, correct answer (when available), correctness, feedback, and retry recommendation.
+- **Review targets (v2.2)** — self-check items MUST link to teaching sections with `href="#sX"` or `onclick="scrollToDetail('sX')"`. Wrong quiz feedback SHOULD point to the relevant concept section with a review target.
 - **AI handoff actions** — include buttons to copy a detailed Markdown learning report to clipboard and to download a JSON record. Chinese mode downloads `学习记录.json`; English mode downloads `learning-record.json`.
 
 **Bottom-of-lesson navigation (REQUIRED):**
 - **End-of-lesson card** — a visually distinct card at the bottom containing:
   - Lesson completion heading
-  - **Self-check checklist** — clickable ☐ items that toggle to ☑ (green when checked). Example items: "I can name all 5 MDP components", "I understand the Markov property", etc. Implemented via `toggleCheck()` function.
+  - **Self-check checklist** — clickable ☐ items that toggle to ☑ (green when checked). Each item also has a non-toggling `复习 →` / `Review →` link back to the exact section that teaches the concept. Example items: "I can name all 5 MDP components", "I understand the Markov property", etc. Implemented via `toggleCheck()` function.
   - **Learning record panel** — shows completion percentage, quiz score, checked self-assessment items, and weak spots.
   - **Export actions** — buttons for `复制学习记录给AI` / `Copy learning record for AI` and `下载学习记录.json` / `Download learning-record.json`.
   - **Next-step command** — a styled `<code>` block showing exactly what to type in Claude Code to continue (e.g., `继续第3课 价值函数` / `Continue Lesson 3: Value Functions`)
@@ -169,7 +171,7 @@ Each HTML lesson MUST include:
 - **Save-on-interaction** — every quiz answer and checklist toggle calls `saveRecord()` and `updateRecordUI()`.
 - **Restore-on-load** — when the page loads, call `loadRecord()` to restore previous quiz/checklist state from `localStorage`.
 - **Copy format** — clipboard text MUST be a detailed Markdown report, not a terse dashboard. It must list every quiz question, whether it was correct, the learner's selected answer, the correct answer when available, feedback/retry notes, every checked/unchecked checklist item, weak spots, and next command.
-- **Export format** — exported JSON MUST include `topic`, `lessonId`, `lessonTitle`, `language`, `updatedAt`, `completion`, `quiz`, `checklist`, `weakSpots`, and `nextCommand`. Each `quiz` item MUST include `id`, `question`, `concept`, `answered`, `correct`, `choiceIndex`, `choiceText`, `correctAnswer`, `feedback`, and `retrySuggestion`.
+- **Export format** — exported JSON MUST include `topic`, `lessonId`, `lessonTitle`, `language`, `updatedAt`, `completion`, `quiz`, `checklist`, `weakSpots`, and `nextCommand`. Each `quiz` item MUST include `id`, `question`, `concept`, `answered`, `correct`, `choiceIndex`, `choiceText`, `correctAnswer`, `feedback`, `retrySuggestion`, and `reviewTarget` when available. Each checklist item MUST include clean `text`, `checked`, and `reviewTarget`.
 - **Tab switching** — MUST query panels from the parent section (`section.querySelectorAll(".tab-panel")`), NOT from the tabs container (`.tabs` only contains buttons, not panels — this is a verified bug pattern to avoid)
 - **All JS uses `function` keyword and `var`** (not arrow functions or `const`/`let`) for maximum browser compatibility
 
@@ -232,6 +234,7 @@ Choose outputs based on the user's goal:
 - exam/interview: map + flashcards + graded mock questions
 - blog/writing: map + analogies + examples + outline
 - codebase/domain learning: repo map + terminology glossary + walkthrough tasks
+- interactive courseware update: anchored explanations + quizzes + self-check checklist with review-back links + exportable learning record
 
 When the user asks for a final artifact, produce a concise learning dossier:
 
@@ -269,3 +272,4 @@ When the user asks for a final artifact, produce a concise learning dossier:
 - **`querySelectorAll` scoping bug** — when switching tabs, always query panels from the parent section, not the tabs button container.
 - **Quiz double-click corruption** — always guard mini-quiz answer handlers against repeated clicks.
 - **`scroll-margin-top` inconsistency** — use manual scroll position calculation instead of relying on CSS scroll-margin for cross-browser reliability.
+- **Checklist review-link bug** — clicking a `复习 →` / `Review →` link inside a checklist item must not toggle the checklist. Use `event.stopPropagation()` on the link and store checklist text from `.check-text`, not `textContent` from the whole item.

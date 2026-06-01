@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code Skill](https://img.shields.io/badge/Claude%20Code-Skill-38bdf8)](https://claude.com/claude-code)
-[![Version](https://img.shields.io/badge/version-2.1-a78bfa)]()
+[![Version](https://img.shields.io/badge/version-2.2-a78bfa)]()
 
 **把 Claude Code/Codex 变成一个耐心的、自适应的领域导师。**
 
@@ -101,7 +101,7 @@ Skill 启动后，第一条消息会问你：
 
 ---
 
-## 交互式 HTML 课件特性（v2.1）
+## 交互式 HTML 课件特性（v2.2）
 
 从第 1 课开始，每课生成一个自包含的交互式 HTML 页面，**所有课件标配以下功能**：
 
@@ -127,10 +127,11 @@ Skill 启动后，第一条消息会问你：
 - 🎯 **MDP 卡片精准滚动** — 手动计算 `getBoundingClientRect` 而非依赖 `scroll-margin-top`
 - 💾 **学习记录持久化** — 使用 `localStorage` 保存答题、勾选、自评和完成度；刷新页面后仍可恢复
 - 📤 **AI 接力导出** — 一键复制详细学习报告给 AI（逐题对错、你的选择、正确答案、反馈建议、自检勾选明细），或下载 `学习记录.json` 放回课程目录，方便后续读取学习效果
+- 🔁 **自检回跳复习** — 每个自检项都带 `复习 →` 链接，忘记某个点时可直接跳回当前课件对应讲解段落
 
 ### 底部导航（防迷路）
 - 🏁 **完结卡片** — 虚线边框收尾卡，包含：
-  - ✅ **自检清单** — 点击 ☐ → ☑ 标记已掌握
+  - ✅ **自检清单** — 点击 ☐ → ☑ 标记已掌握，每项右侧都有 `复习 →` 回到对应讲解
   - 💾 **学习记录面板** — 显示完成度、答题正确率、已勾选清单和薄弱点
   - 📋 **下一步指令** — 等宽字体框，可直接复制粘贴回 Claude Code
   - 🔮 **下节课预告** — 一句话预告内容
@@ -155,6 +156,7 @@ Skill 内置了完整的 HTML 课件脚手架（见 `references/session-artifact
 | 滚动计算 | `getBoundingClientRect().top + pageYOffset - 85` 偏移 header |
 | 测验防重复 | `_mqAnswered[quizId]` 字典守卫 |
 | 学习记录 | `localStorage` 自动保存，支持复制详细 Markdown 报告和下载 `学习记录.json` |
+| 自检复习 | 每个 `.check-item` 包含 `.check-text` 和 `.review-link`，点击 `复习 →` 不触发勾选 |
 | 底部条触发 | `IntersectionObserver`，threshold 0.3 |
 
 ---
