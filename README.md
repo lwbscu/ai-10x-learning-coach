@@ -15,7 +15,7 @@
 ## Demo：5 分钟学会一个新领域
 
 ```
-你: 使用 ai-10x-learning-coach 教我强化学习
+你: 使用 skill 教我强化学习
 AI: 🌐 中文版还是 English version?
 你: 中文
 AI: 请告诉我你的背景和学习目标...
