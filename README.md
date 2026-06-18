@@ -7,35 +7,40 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/lwbscu/ai-10x-learning-coach"><img alt="GitHub" src="docs/assets/badges/github.svg"></a>
-  <a href="https://lwbscu.github.io/ai-10x-learning-coach/promo-video.html"><img alt="60s Demo" src="docs/assets/badges/demo.svg"></a>
-  <a href="README.en.md"><img alt="Documentation" src="docs/assets/badges/docs-en.svg"></a>
-  <a href="README.cn.md"><img alt="Chinese Documentation" src="docs/assets/badges/docs-cn.svg"></a>
-  <a href="https://mp.weixin.qq.com/s/OsIiHKvV8h0e9URDjRBJnw?scene=1&amp;click_id=669507184"><img alt="WeChat" src="docs/assets/badges/wechat.svg"></a>
-  <a href="https://zhuanlan.zhihu.com/p/2044006519017035140"><img alt="Zhihu" src="docs/assets/badges/zhihu.svg"></a>
+  <a href="https://github.com/lwbscu/ai-10x-learning-coach"><img alt="GitHub Repo" src="https://img.shields.io/badge/GitHub-Repo-181717?style=for-the-badge&logo=github&logoColor=white"></a>
+  <a href="https://lwbscu.github.io/ai-10x-learning-coach/promo-video.html"><img alt="60s Demo" src="https://img.shields.io/badge/60s-Demo-ff4d4f?style=for-the-badge&logo=youtube&logoColor=white"></a>
+  <a href="README.en.md"><img alt="Documentation" src="https://img.shields.io/badge/Documentation-6f42c1?style=for-the-badge&logo=readthedocs&logoColor=white"></a>
+  <a href="README.cn.md"><img alt="Chinese Documentation" src="https://img.shields.io/badge/%E4%B8%AD%E6%96%87-%E6%96%87%E6%A1%A3-d9534f?style=for-the-badge&logo=readme&logoColor=white"></a>
+  <a href="https://lwbscu.github.io/ai-10x-learning-coach/"><img alt="Live Demo" src="https://img.shields.io/badge/Live-Demo-00a6d6?style=for-the-badge&logo=gitbook&logoColor=white"></a>
+  <a href="https://mp.weixin.qq.com/s/mO-GAe4arXsKBZTzipwLuA"><img alt="WeChat" src="https://img.shields.io/badge/WeChat-07C160?style=for-the-badge&logo=wechat&logoColor=white"></a>
+  <a href="https://zhuanlan.zhihu.com/p/2050915019571963028"><img alt="Zhihu" src="https://img.shields.io/badge/Zhihu-0084FF?style=for-the-badge&logo=zhihu&logoColor=white"></a>
 </p>
 
 <p align="center">
-  <a href="LICENSE"><img alt="License MIT" src="docs/assets/badges/license.svg"></a>
-  <a href="https://skills.sh"><img alt="Agent Skill Compatible" src="docs/assets/badges/skill.svg"></a>
-  <img alt="Version 2.5" src="docs/assets/badges/version.svg">
-  <a href="README.en.md"><img alt="Language English" src="docs/assets/badges/lang-en.svg"></a>
-  <a href="README.cn.md"><img alt="Language Simplified Chinese" src="docs/assets/badges/lang-cn.svg"></a>
+  <a href="LICENSE"><img alt="License MIT" src="https://img.shields.io/badge/License-MIT-f0ad4e?style=for-the-badge"></a>
+  <a href="https://skills.sh"><img alt="Agent Skill" src="https://img.shields.io/badge/Agent-Skill-38bdf8?style=for-the-badge"></a>
+  <img alt="Version 2.5" src="https://img.shields.io/badge/version-2.5-38bdf8?style=for-the-badge">
+  <a href="README.en.md"><img alt="English" src="https://img.shields.io/badge/lang-English-007ec6?style=for-the-badge"></a>
+  <a href="README.cn.md"><img alt="Simplified Chinese" src="https://img.shields.io/badge/%E8%AF%AD%E8%A8%80-%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-d9534f?style=for-the-badge"></a>
 </p>
 
 **Map first. Learn faster.**
 
-LearnMap is an Agent Skill that turns a vague learning request into mapped, interactive HTML courseware: fast overview when you need the whole picture, slow chapter-by-chapter mode when you need depth, mastery checks that point back to the exact concept, and exportable learning records for AI follow-up.
+LearnMap is an Agent Skill that turns a vague learning request into mapped, interactive HTML courseware. It starts with a knowledge map, then builds lessons with navigation, checks, wrong-answer feedback, review jumps, and exportable learning records for AI follow-up.
 
 <p align="center">
   <a href="https://lwbscu.github.io/ai-10x-learning-coach/promo-video.html">
-    <img src="docs/assets/learnmap-demo-poster.png" alt="Watch the 60-second LearnMap usage walkthrough" width="900">
+    <img src="docs/assets/learnmap-demo-poster.png" alt="Watch the LearnMap 60-second usage walkthrough" width="900">
   </a>
   <br>
   <a href="https://lwbscu.github.io/ai-10x-learning-coach/promo-video.html">Watch the 60-second usage walkthrough</a>
 </p>
 
-Links: [Live demo](https://lwbscu.github.io/ai-10x-learning-coach/) · [Usage video](https://lwbscu.github.io/ai-10x-learning-coach/promo-video.html) · [中文文档](README.cn.md) · [English docs](README.en.md)
+## What's NEW!
+
+- [2026/06] 🔥 LearnMap adds fast overview mode, slow deep-course mode, and a recorded usage walkthrough.
+- [2026/06] 🔥 Optional HTML video explainers and mentor lenses are now opt-in learning paths.
+- [2026/05] 🔥 Interactive HTML lessons export learning records for AI follow-up.
 
 ## Install
 
@@ -59,13 +64,6 @@ New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex\skills" | Out-Null
 git clone https://github.com/lwbscu/ai-10x-learning-coach.git "$env:USERPROFILE\.codex\skills\learnmap-skill"
 ```
 
-Project-level install:
-
-```bash
-mkdir -p .claude/skills
-git clone https://github.com/lwbscu/ai-10x-learning-coach.git .claude/skills/learnmap-skill
-```
-
 ## Use
 
 ```text
@@ -76,73 +74,27 @@ Use learnmap-skill to teach me reinforcement learning. I know Python and want to
 使用 learnmap-skill 快速模式教我强化学习。
 ```
 
-LearnMap asks for language first, then asks whether you want fast overview mode or slow deep-course mode when the mode is not explicit.
+LearnMap asks for language first. If you do not specify a courseware mode, it asks once and defaults to slow mode.
 
-## What's New
+## Courseware Modes
 
-- [2026/06] LearnMap adds fast overview mode, slow deep-course mode, and an embedded recorded usage walkthrough.
-- [2026/06] Optional HTML video explainers and mentor lenses are now opt-in learning paths.
-- [2026/05] Interactive HTML lessons now export detailed learning records for AI follow-up.
+| Mode | Best for | Output |
+|---|---|---|
+| Fast overview | Quick whole-picture understanding | One condensed interactive HTML page with map, examples, traps, checks, and next steps |
+| Slow course | Structured depth | Global map first, then one interactive lesson per chapter |
 
 ## What It Produces
 
 | Need | Output |
 |---|---|
-| Understand the whole picture quickly | One condensed interactive HTML overview with map, examples, traps, checks, and next steps |
-| Learn a new field deeply | Global map, chapter path, interactive HTML lessons, mastery checks |
-| Recover from mistakes | Wrong quiz feedback with a `Review` jump back to the exact section that taught the concept |
-| Prepare for a project | Decision checklist, risk list, implementation route |
-| Prepare for an exam or interview | Knowledge map, active-recall prompts, graded questions |
-| Understand a codebase | Repo map, glossary, walkthrough tasks |
-| Explain a lesson visually | Optional HTML motion explainer with bilingual captions |
-| Learn through a lens | Optional mentor-lens brief, adapted examples, counterexamples, and boundaries |
-
-The video-style explainer is not generated by default. LearnMap asks first and starts with an HTML preview rather than an MP4 render.
-
-Mentor lenses are also opt-in. For example, "explain PPO through a Feynman lens" changes the teaching structure and examples, but does not impersonate the person or invent quotes.
-
-## Example Flow
-
-```text
-You: Use learnmap-skill to teach me reinforcement learning.
-AI: 中文版还是 English version?
-You: English. Slow mode. I know Python and want to run a simple experiment in one week.
-AI: Creates lesson-01-global-map/index.html with a domain map and mastery check.
-You: Send exported learning record after completing the lesson.
-AI: Diagnoses weak spots, updates mistakes.md, and decides whether to reteach or continue.
-```
-
-Fast mode produces one concise interactive courseware page: `快速总览/课件.html` or `fast-overview/index.html`.
-
-Slow mode uses paths such as `learning/reinforcement-learning/lesson-01-global-map/index.html` and continues one chapter at a time.
-
-## Repository
-
-```text
-learnmap-skill/
-├── SKILL.md
-├── README.md
-├── README.cn.md
-├── README.en.md
-├── agents/openai.yaml
-├── docs/
-│   ├── index.html
-│   ├── promo-video.html
-│   └── assets/learnmap-cover.png
-├── scripts/
-│   └── deepseek-skill-eval.mjs
-└── references/
-    ├── assessment-rubric.md
-    ├── cognitive-distillation.md
-    ├── quality-ratchet.md
-    ├── session-artifacts.md
-    └── video-visualization.md
-```
+| Learn a field | Knowledge map, path, chapter lessons |
+| Recover from mistakes | Wrong-answer feedback with `Review` jumps back to the source concept |
+| Continue later | Markdown or JSON learning records for AI follow-up |
+| Explain visually | Optional HTML motion explainer, not generated by default |
+| Learn through a lens | Optional mentor-lens brief with examples and boundaries |
 
 ## Sources
 
-Core learning workflow inspired by [如何用 Claude Code 开启 10 倍学习法？](https://mp.weixin.qq.com/s/DF2-X_iXMMz6e28v3Da3EQ). The optional visual-explainer workflow incorporates the idea of chaining small video skills into a clear production pipeline. The quality gate adapts ideas from [Darwin Skill](https://github.com/alchaincyf/darwin-skill); the optional mentor-lens workflow adapts cognitive extraction ideas from [Nuwa Skill](https://github.com/alchaincyf/nuwa-skill).
-
-For skill regression feedback with DeepSeek, set `DEEPSEEK_API_KEY` and run `node scripts/deepseek-skill-eval.mjs`. Reports are written to `.skill-evals/` and ignored by git.
+Learning workflow inspired by [How to Use Claude Code for 10x Learning](https://mp.weixin.qq.com/s/DF2-X_iXMMz6e28v3Da3EQ). The quality gate adapts evaluation ideas from [Darwin Skill](https://github.com/alchaincyf/darwin-skill). The optional mentor-lens workflow adapts cognitive distillation ideas from [Nuwa Skill](https://github.com/alchaincyf/nuwa-skill).
 
 MIT © [lwbscu](https://github.com/lwbscu)
