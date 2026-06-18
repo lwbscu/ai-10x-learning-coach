@@ -1,15 +1,15 @@
 # LearnMap
 
 <p align="center">
-  <a href="https://lwbscu.github.io/ai-10x-learning-coach/">
+  <a href="https://lwbscu.github.io/learnmap/">
     <img src="docs/assets/learnmap-cover.png" alt="LearnMap cover" width="960">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/lwbscu/ai-10x-learning-coach"><img alt="GitHub Repo" src="https://img.shields.io/badge/GitHub-Repo-181717?style=flat&logo=github&logoColor=white"></a>
-  <a href="https://lwbscu.github.io/ai-10x-learning-coach/promo-video.html"><img alt="60s Demo" src="https://img.shields.io/badge/60s-Demo-ff4d4f?style=flat&logo=youtube&logoColor=white"></a>
-  <a href="https://lwbscu.github.io/ai-10x-learning-coach/"><img alt="Live Demo" src="https://img.shields.io/badge/Live-Demo-00a6d6?style=flat&logo=gitbook&logoColor=white"></a>
+  <a href="https://github.com/lwbscu/learnmap"><img alt="GitHub Repo" src="https://img.shields.io/badge/GitHub-Repo-181717?style=flat&logo=github&logoColor=white"></a>
+  <a href="https://lwbscu.github.io/learnmap/promo-video.html"><img alt="60s Demo" src="https://img.shields.io/badge/60s-Demo-ff4d4f?style=flat&logo=youtube&logoColor=white"></a>
+  <a href="https://lwbscu.github.io/learnmap/"><img alt="Live Demo" src="https://img.shields.io/badge/Live-Demo-00a6d6?style=flat&logo=gitbook&logoColor=white"></a>
   <a href="https://mp.weixin.qq.com/s/mO-GAe4arXsKBZTzipwLuA"><img alt="WeChat" src="https://img.shields.io/badge/WeChat-07C160?style=flat&logo=wechat&logoColor=white"></a>
   <a href="https://zhuanlan.zhihu.com/p/2050915019571963028"><img alt="Zhihu" src="https://img.shields.io/badge/Zhihu-0084FF?style=flat&logo=zhihu&logoColor=white"></a>
   <a href="https://juejin.cn/spost/7652384976291414054"><img alt="Juejin" src="https://img.shields.io/badge/Juejin-1E80FF?style=flat&logo=juejin&logoColor=white"></a>
@@ -28,11 +28,11 @@
 LearnMap is an Agent Skill that turns a vague learning request into mapped, interactive HTML courseware. It starts with a knowledge map, then builds lessons with navigation, checks, wrong-answer feedback, review jumps, and exportable learning records for AI follow-up.
 
 <p align="center">
-  <a href="https://lwbscu.github.io/ai-10x-learning-coach/promo-video.html">
+  <a href="https://lwbscu.github.io/learnmap/promo-video.html">
     <img src="docs/assets/learnmap-demo-poster.png" alt="Watch the LearnMap 60-second usage walkthrough" width="900">
   </a>
   <br>
-  <a href="https://lwbscu.github.io/ai-10x-learning-coach/promo-video.html">Watch the 60-second usage walkthrough</a>
+  <a href="https://lwbscu.github.io/learnmap/promo-video.html">Watch the 60-second usage walkthrough</a>
 </p>
 
 ## What's NEW!
@@ -46,21 +46,21 @@ LearnMap is an Agent Skill that turns a vague learning request into mapped, inte
 Claude Code user-level install:
 
 ```bash
-git clone https://github.com/lwbscu/ai-10x-learning-coach.git ~/.claude/skills/learnmap-skill
+git clone https://github.com/lwbscu/learnmap.git ~/.claude/skills/learnmap-skill
 ```
 
 Windows PowerShell:
 
 ```powershell
 New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills" | Out-Null
-git clone https://github.com/lwbscu/ai-10x-learning-coach.git "$env:USERPROFILE\.claude\skills\learnmap-skill"
+git clone https://github.com/lwbscu/learnmap.git "$env:USERPROFILE\.claude\skills\learnmap-skill"
 ```
 
 Codex user-level install:
 
 ```powershell
 New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex\skills" | Out-Null
-git clone https://github.com/lwbscu/ai-10x-learning-coach.git "$env:USERPROFILE\.codex\skills\learnmap-skill"
+git clone https://github.com/lwbscu/learnmap.git "$env:USERPROFILE\.codex\skills\learnmap-skill"
 ```
 
 ## Use

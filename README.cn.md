@@ -1,15 +1,15 @@
 # LearnMap
 
 <p align="center">
-  <a href="https://lwbscu.github.io/ai-10x-learning-coach/">
+  <a href="https://lwbscu.github.io/learnmap/">
     <img src="docs/assets/learnmap-cover.png" alt="LearnMap cover" width="960">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/lwbscu/ai-10x-learning-coach"><img alt="GitHub Repo" src="https://img.shields.io/badge/GitHub-Repo-181717?style=flat&logo=github&logoColor=white"></a>
-  <a href="https://lwbscu.github.io/ai-10x-learning-coach/promo-video.html"><img alt="60s Demo" src="https://img.shields.io/badge/60s-Demo-ff4d4f?style=flat&logo=youtube&logoColor=white"></a>
-  <a href="https://lwbscu.github.io/ai-10x-learning-coach/"><img alt="Live Demo" src="https://img.shields.io/badge/Live-Demo-00a6d6?style=flat&logo=gitbook&logoColor=white"></a>
+  <a href="https://github.com/lwbscu/learnmap"><img alt="GitHub Repo" src="https://img.shields.io/badge/GitHub-Repo-181717?style=flat&logo=github&logoColor=white"></a>
+  <a href="https://lwbscu.github.io/learnmap/promo-video.html"><img alt="60s Demo" src="https://img.shields.io/badge/60s-Demo-ff4d4f?style=flat&logo=youtube&logoColor=white"></a>
+  <a href="https://lwbscu.github.io/learnmap/"><img alt="Live Demo" src="https://img.shields.io/badge/Live-Demo-00a6d6?style=flat&logo=gitbook&logoColor=white"></a>
   <a href="https://mp.weixin.qq.com/s/mO-GAe4arXsKBZTzipwLuA"><img alt="WeChat" src="https://img.shields.io/badge/WeChat-07C160?style=flat&logo=wechat&logoColor=white"></a>
   <a href="https://zhuanlan.zhihu.com/p/2050915019571963028"><img alt="Zhihu" src="https://img.shields.io/badge/Zhihu-0084FF?style=flat&logo=zhihu&logoColor=white"></a>
   <a href="https://juejin.cn/spost/7652384976291414054"><img alt="Juejin" src="https://img.shields.io/badge/Juejin-1E80FF?style=flat&logo=juejin&logoColor=white"></a>
@@ -28,11 +28,11 @@
 LearnMap 是一个面向 Agent Skill 的学习工具。它不会直接输出一篇长文，而是先把陌生主题变成知识地图，再生成可交互 HTML 课件、掌握检查、错题复习跳转和可导出的学习记录。
 
 <p align="center">
-  <a href="https://lwbscu.github.io/ai-10x-learning-coach/promo-video.html">
+  <a href="https://lwbscu.github.io/learnmap/promo-video.html">
     <img src="docs/assets/learnmap-demo-poster.png" alt="观看 LearnMap 60 秒使用流程演示" width="900">
   </a>
   <br>
-  <a href="https://lwbscu.github.io/ai-10x-learning-coach/promo-video.html">观看 60 秒使用流程演示</a>
+  <a href="https://lwbscu.github.io/learnmap/promo-video.html">观看 60 秒使用流程演示</a>
 </p>
 
 ## What's NEW!
@@ -46,21 +46,21 @@ LearnMap 是一个面向 Agent Skill 的学习工具。它不会直接输出一�
 Claude Code 用户级安装：
 
 ```bash
-git clone https://github.com/lwbscu/ai-10x-learning-coach.git ~/.claude/skills/learnmap-skill
+git clone https://github.com/lwbscu/learnmap.git ~/.claude/skills/learnmap-skill
 ```
 
 Windows PowerShell：
 
 ```powershell
 New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills" | Out-Null
-git clone https://github.com/lwbscu/ai-10x-learning-coach.git "$env:USERPROFILE\.claude\skills\learnmap-skill"
+git clone https://github.com/lwbscu/learnmap.git "$env:USERPROFILE\.claude\skills\learnmap-skill"
 ```
 
 Codex 用户级安装：
 
 ```powershell
 New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex\skills" | Out-Null
-git clone https://github.com/lwbscu/ai-10x-learning-coach.git "$env:USERPROFILE\.codex\skills\learnmap-skill"
+git clone https://github.com/lwbscu/learnmap.git "$env:USERPROFILE\.codex\skills\learnmap-skill"
 ```
 
 ## 使用
